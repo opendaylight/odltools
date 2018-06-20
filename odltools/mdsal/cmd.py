@@ -1,4 +1,4 @@
-import request
+from odltools.mdsal import request
 
 DSM_FILE = 0
 DSM_DSTYPE = 1

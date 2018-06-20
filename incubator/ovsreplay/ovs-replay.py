@@ -67,7 +67,7 @@ def system(cmd):
 
 def docker_up():
     global container_name
-    print 'Launching container...'
+    print("Launching container...")
     system('docker run --name %s -e MODE=none -itd --cap-add ALL jhershbe/fedora-ovs-replay' % container_name)
     time.sleep(5)
 
@@ -84,7 +84,7 @@ def docker_exec(cmd):
 
 
 def config_ports(ports_path, show_path):
-    print 'Configuring ports...'
+    print("Configuring ports...")
     port2num = parse_show(show_path)
     uuid2ip = parse_ports(ports_path)
 
@@ -107,7 +107,7 @@ def config_ports(ports_path, show_path):
 
 
 def config_groups(path):
-    print 'Configuring groups...'
+    print("Configuring groups...")
     groups_dump = ''
     with open(path, 'r') as f:
         groups_dump = f.read()
@@ -123,7 +123,7 @@ def config_groups(path):
 
 
 def config_flows(path):
-    print 'Configuring flows...'
+    print("Configuring flows...")
     docker_exec('ovs-ofctl -OOpenFlow13 del-flows br-int')
     with open(path, 'r') as f:
         for line in f:
@@ -148,4 +148,4 @@ docker_up()
 config_ports(args.ports, args.show)
 config_groups(args.groups)
 config_flows(args.flows)
-print 'Done replaying OVS, connect to container with: docker exec -ti %s bash' % container_name
+print("Done replaying OVS, connect to container with: docker exec -ti {} bash".format(container_name))
