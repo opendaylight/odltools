@@ -13,8 +13,9 @@
 # limitations under the License.
 
 import logging
-import re
 from pprint import pformat
+import re
+
 from odltools.netvirt import request
 from odltools.netvirt import tables
 

@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from odltools.mdsal.models import constants
+from odltools.mdsal.models.model import Model
+from odltools.mdsal.models.neutron import Neutron
+from odltools.mdsal.models.opendaylight_inventory import Nodes
 from odltools.netvirt import config
 from odltools.netvirt import flow_parser
 from odltools.netvirt import flows
-from odltools.mdsal.models import constants
-from odltools.mdsal.models.neutron import Neutron
-from odltools.mdsal.models.opendaylight_inventory import Nodes
-from odltools.mdsal.models.model import Model
 from odltools.netvirt import utils
 
 

@@ -1,9 +1,7 @@
-#!/usr/bin/python
-
 import argparse
 import json
-import re
 import os
+import re
 import sys
 import time
 
@@ -31,7 +29,7 @@ def parse_show(path):
     ret = {}
     for line in show_dump:
         match = re.match(IFC_PATTERN, line)
-        if match:
+        if match is not None:
             ret[match.group('name')] = match.group('ofport')
     show_dump.close()
     return ret

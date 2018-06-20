@@ -16,6 +16,7 @@ import errno
 import json
 import logging
 import os
+
 import requests
 
 logger = logging.getLogger("mdsal.request")

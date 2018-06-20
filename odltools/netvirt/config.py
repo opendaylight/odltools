@@ -13,8 +13,9 @@
 # limitations under the License.
 
 import re
-from odltools.mdsal.models.models import Models
+
 from odltools.mdsal.models.itm_state import DpnEndpoints
+from odltools.mdsal.models.models import Models
 from odltools.mdsal.models.neutron import Neutron
 
 gmodels = None

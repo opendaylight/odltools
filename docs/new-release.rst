@@ -42,12 +42,13 @@ Release on PyPi
    python setup.py bdist_wheel upload - r pypi
 
 or in one shot:
+
 ::
 
    python setup.py clean sdist bdist_wheel upload
 
 .. note::
-   The above commands assume a .pypirc like below is used:
+   The above commands assume a .pypirc like below will be used:
 
 ::
 

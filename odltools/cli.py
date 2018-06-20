@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+
 from odltools import logg
 import odltools.csit.cli
 import odltools.karaf.cli

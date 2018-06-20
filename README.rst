@@ -19,7 +19,7 @@ odltools
 
 A tool to troubleshoot the NetVirt OpenDaylight OpenStack integration.
 
-The tool can be used to get mdsal model dumps, openvswitch flow dumps
+The tool can get mdsal model dumps, openvswitch flow dumps
 and extracting dumps from CSIT output.xml files.
 
 odltool's documentation can be found at `Read The Docs - TBD <http://odltools.readthedocs.org>`_.
@@ -70,7 +70,7 @@ Feel free to contribute to:
 Please see the `Contributor Guidelines <http://github.com/shague/odltools/CONTRIBUTING.rst>`_
 for information about contributing.
 
-License
--------
+Licensing
+---------
 
 See the `LICENSE <http://github.com/shague/odltools/LICENSE.txt>`_ file

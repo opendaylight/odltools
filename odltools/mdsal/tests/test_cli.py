@@ -16,6 +16,7 @@ import logging
 import os
 import shutil
 import unittest
+
 from odltools import logg
 from odltools.mdsal.models import model
 from odltools.mdsal.models import models

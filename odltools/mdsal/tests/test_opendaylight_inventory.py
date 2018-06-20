@@ -14,10 +14,11 @@
 
 import logging
 import unittest
+
 from odltools import logg
-from odltools.mdsal.models.opendaylight_inventory import nodes
-from odltools.mdsal.models.model import Model
 from odltools.mdsal import tests
+from odltools.mdsal.models.model import Model
+from odltools.mdsal.models.opendaylight_inventory import nodes
 
 
 class TestOpendaylightInventory(unittest.TestCase):

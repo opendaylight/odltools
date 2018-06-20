@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+
 from odltools.mdsal.models import elan
 from odltools.mdsal.models import id_manager
 from odltools.mdsal.models import ietf_interfaces
@@ -20,13 +21,13 @@ from odltools.mdsal.models import interface_service_bindings
 from odltools.mdsal.models import itm_state
 from odltools.mdsal.models import l3vpn
 from odltools.mdsal.models import mip
+from odltools.mdsal.models import model
 from odltools.mdsal.models import network_topology
 from odltools.mdsal.models import neutron
 from odltools.mdsal.models import odl_fib
 from odltools.mdsal.models import odl_interface_meta
 from odltools.mdsal.models import odl_l3vpn
 from odltools.mdsal.models import opendaylight_inventory
-from odltools.mdsal.models import model
 from odltools.mdsal.models.model import Model
 from odltools.mdsal.models.Modules import netvirt_data_models
 

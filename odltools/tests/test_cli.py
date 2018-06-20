@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import unittest
+
 from odltools import cli
 from odltools.csit import robotfiles
 

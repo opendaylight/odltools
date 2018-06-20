@@ -14,11 +14,12 @@
 
 import logging
 import unittest
+
 from odltools import logg
+from odltools.mdsal import tests
+from odltools.mdsal.models.model import Model
 from odltools.mdsal.models.neutron import Neutron
 from odltools.mdsal.models.neutron import neutron
-from odltools.mdsal.models.model import Model
-from odltools.mdsal import tests
 
 
 class TestNeutron(unittest.TestCase):

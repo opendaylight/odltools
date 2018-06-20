@@ -14,10 +14,11 @@
 
 import logging
 import unittest
+
 from odltools import logg
+from odltools.mdsal import tests
 from odltools.mdsal.models.id_manager import id_pools
 from odltools.mdsal.models.model import Model
-from odltools.mdsal import tests
 
 
 class TestIdManager(unittest.TestCase):

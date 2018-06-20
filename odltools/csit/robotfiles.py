@@ -13,10 +13,11 @@
 # limitations under the License.
 
 import logging
-import xml.etree.cElementTree as ET
 import os
 import re
 from subprocess import Popen
+import xml.etree.cElementTree as ET
+
 from odltools.netvirt import ovs_flows
 
 logger = logging.getLogger("csit.robotfiles")

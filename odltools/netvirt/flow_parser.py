@@ -15,7 +15,6 @@
 from odltools.mdsal.models.model import Model
 from odltools.netvirt import utils
 
-
 MAC_LEN = 17
 
 # Flow table constants

@@ -14,6 +14,7 @@
 
 import json
 import logging
+
 import odltools.mdsal.request
 
 logger = logging.getLogger("mdsal.model")

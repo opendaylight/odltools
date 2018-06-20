@@ -14,14 +14,15 @@
 
 import collections
 import logging
+
 from odltools.mdsal.models import constants
 from odltools.mdsal.models.model import Model
 from odltools.mdsal.models.neutron import Neutron
 from odltools.mdsal.models.opendaylight_inventory import Nodes
-from odltools.netvirt import tables as tbls
-from odltools.netvirt import utils
 from odltools.netvirt import config
 from odltools.netvirt import flow_parser
+from odltools.netvirt import tables as tbls
+from odltools.netvirt import utils
 
 logger = logging.getLogger("netvirt.flows")
 

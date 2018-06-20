@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from contextlib import contextmanager
 import sys
+
 # String IO is different python 3.5 than 2.7
 try:
     from cStringIO import StringIO
 except ImportError:
     from io import StringIO
-from contextlib import contextmanager
 
 
 @contextmanager

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import collections
+
 from odltools.mdsal.models.model import Model
 
 MODULE = "opendaylight-inventory"

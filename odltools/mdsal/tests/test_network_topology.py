@@ -14,11 +14,12 @@
 
 import logging
 import unittest
+
 from odltools import logg
-from odltools.mdsal.models.model import Model
-from odltools.mdsal.models.network_topology import NetworkTopology
-from odltools.mdsal.models.network_topology import network_topology
 from odltools.mdsal import tests
+from odltools.mdsal.models.model import Model
+from odltools.mdsal.models.network_topology import network_topology
+from odltools.mdsal.models.network_topology import NetworkTopology
 
 
 class TestNetworkTopology(unittest.TestCase):

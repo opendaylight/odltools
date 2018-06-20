@@ -15,13 +15,14 @@
 import logging
 import os
 import unittest
+
 from odltools import logg
 from odltools.csit.robotfiles import RobotFiles
-
 
 # Requirements
 # - output.xml.gz in /tmp
 # - running tests will create job dir, unzip, parse and format output
+
 
 class TestRobotFiles(unittest.TestCase):
     DATAPATH = "/tmp/output_02_l3.xml.gz"
@@ -35,7 +36,7 @@ class TestRobotFiles(unittest.TestCase):
         self.robotfile.mk_outdir()
         self.assertTrue(os.path.isdir(self.robotfile.outdir))
 
-    @unittest.skip("skipping")
+    # @unittest.skip("skipping")
     def test_gunzip_xml_data_file(self):
         self.robotfile = RobotFiles(self.DATAPATH, self.OUTPATH)
         self.robotfile.mk_outdir()

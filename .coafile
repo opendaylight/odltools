@@ -1,0 +1,46 @@
+[all]
+ignore = .tox/**
+
+[all.GitCommit]
+bears = GitCommitBear
+ignore_length_regex = Signed-off-by,
+    Also-by,
+    Co-authored-by,
+    http://,
+    https://
+
+[all.Python]
+bears =
+    PEP8Bear,
+    # PyCommentedCodeBear, # Needs a lot of work
+    PyDocStyleBear, # Needs a lot of work
+    PyFlakesBear,
+    PyImportSortBear
+files = **/*.py
+max_line_length = 120
+ignore += incubator/ovsreplay/ovs-replay.py # nobody likes this file
+pydocstyle_ignore = D100, D101, D102, D103, D104, D105, D205, D208, D212, D400, D403
+
+[all.Python-bandit]
+# broken out to own section so ovs-replay can be ignored
+bears = BanditBear
+files = **/*.py
+bandit_skipped_tests = B108, # Test for insecure usage of tmp file/directory
+    B313, # cElementTree
+    B404, # Consider possible security implications associated with Popen module.
+    B405, # cElementTree
+    B602 # subprocess call with shell=True identified, security issue.
+ignore += incubator/ovsreplay/ovs-replay.py # bandit does not like this file
+
+[all.reStructuredText]
+bears = RSTcheckBear,
+    # WriteGoodLintBear # has issues with some passive words
+files = **.rst
+
+[all.Spacing]
+bears = SpaceConsistencyBear
+files = **/*.py
+use_spaces = True
+allow_trailing_whitespace = False
+enforce_newline_at_EOF = True
+# default_actions = SpaceConsistencyBear: ApplyPatchAction

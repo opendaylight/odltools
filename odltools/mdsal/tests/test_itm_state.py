@@ -14,12 +14,13 @@
 
 import logging
 import unittest
+
 from odltools import logg
+from odltools.mdsal import tests
 from odltools.mdsal.models.itm_state import dpn_endpoints
 from odltools.mdsal.models.itm_state import DpnEndpoints
 from odltools.mdsal.models.itm_state import tunnels_state
 from odltools.mdsal.models.model import Model
-from odltools.mdsal import tests
 
 logger = logging.getLogger("test.itmstate")
 

@@ -14,11 +14,12 @@
 
 import logging
 import unittest
+
 from odltools import logg
+from odltools.mdsal import tests
 from odltools.mdsal.models.ietf_interfaces import interfaces
 from odltools.mdsal.models.ietf_interfaces import interfaces_state
 from odltools.mdsal.models.model import Model
-from odltools.mdsal import tests
 
 
 class TestIetfInterfaces(unittest.TestCase):

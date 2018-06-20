@@ -14,7 +14,6 @@
 
 from odltools.mdsal.models.model import Model
 
-
 MODULE = "l3vpn"
 
 

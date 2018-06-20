@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+
 from requests import sessions
 
 logger = logging.getLogger('common.odl_client')

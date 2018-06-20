@@ -15,6 +15,7 @@
 import logging
 import os
 import unittest
+
 from odltools import logg
 from odltools.netvirt import ovs_flows
 from odltools.netvirt import request
