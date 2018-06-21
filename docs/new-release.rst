@@ -3,26 +3,15 @@ Building a new release of odltools
 
 .. contents::
 
-Update HISTORY.rst or CHANGELOG.rst
------------------------------------
-
-TODO:
-- decide on HISTORY.txt or CHANGELOG.txt
-- release notes
-
-::
-
-   git add HISTORY.rst
-   git commit -s -m "Changelog for upcoming release x.y.z"
-
 Update the Version
 ------------------
 ::
 
    vi odltools/__init__.py
    git add odltools/__init__.py
-   git commit -s -m "Update version x.y.z"
-   git tags x.y.z
+   export PBR_VERSION=x.y.z
+   # git commit -s -m "Update version x.y.z"
+   # git tags x.y.z
 
 Run the Tests
 -------------
