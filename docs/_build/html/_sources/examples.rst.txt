@@ -1,4 +1,0 @@
-odltools examples
-=================
-
-.. contents::
