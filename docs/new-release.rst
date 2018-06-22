@@ -10,8 +10,8 @@ Update the Version
    vi odltools/__init__.py
    git add odltools/__init__.py
    export PBR_VERSION=x.y.z
-   # git commit -s -m "Update version x.y.z"
-   # git tags x.y.z
+   git commit -s -m "Update version x.y.z"
+   git tags x.y.z
 
 Run the Tests
 -------------
