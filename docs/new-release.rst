@@ -5,7 +5,6 @@ Building a new release of odltools
 
 #. Update the Version ::
 
-    git fetch --tags
     vi odltools/__init__.py
     git add odltools/__init__.py
     git commit -s -m "release x.y.z"
