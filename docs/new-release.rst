@@ -5,28 +5,21 @@ Building a new release of odltools
 
 #. Update the Version ::
 
+    git fetch --tags
     vi odltools/__init__.py
     git add odltools/__init__.py
-    export PBR_VERSION=x.y.z
-    git commit -s -m "Update version x.y.z"
-    git tags x.y.z
+    git commit -s -m "release x.y.z"
+    git tags -m "release x.y.z" -a x.y.z
 
 #. Run the Tests ::
 
-    tox
+    tox (or detox)
 
 #. Release on PyPi ::
 
     python setup.py check
     python setup.py clean
-    python setup.py sdist
-    python setup.py sdist upload -r pypi
-    python setup.py bdist_wheel
-    python setup.py bdist_wheel upload - r pypi
-
-   or in one shot::
-
-    python setup.py clean sdist bdist_wheel upload
+    python setup.py sdist bdist_wheel upload
 
    .. note::
 
@@ -40,8 +33,6 @@ Building a new release of odltools
         testpypi
 
     [pypi]
-    #repository=https://upload.pypi.org/legacy/
-    #repository=https://pypi.python.org/pypi
     username = cooldude
     password = coolpw
 
@@ -60,10 +51,9 @@ Building a new release of odltools
 
 #. Push the Code ::
 
-    git push origin release_branch
-    git push --tags
+    git push origin HEAD:refs/for/master
+    git push origin x.y.z
 
 #. Verify All is Good in the World
 
-- Check the PyPi listing page, README, release notes, etc.
-- Check the GitHub listing page
+   Check the `PyPi odltools page <https://pypi.org/project/odltools/>`_, README, release notes, etc.
