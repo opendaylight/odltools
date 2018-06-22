@@ -1,5 +1,5 @@
 [all]
-ignore = .tox/**, docs/**
+ignore = .tox/**, docs/**, .eggs/**
 
 [all.GitCommit]
 bears = GitCommitBear
