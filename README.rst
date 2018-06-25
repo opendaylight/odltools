@@ -1,22 +1,20 @@
-odltools
-========
-
 .. image:: https://travis-ci.org/shague/odltools.png?branch=master
    :target: https://travis-ci.org/shague/odltools
 
-.. image:: https://pypip.in/d/odltools/badge.png
+.. image:: https://img.shields.io/pypi/v/odltools.svg
    :target: https://pypi.python.org/pypi/odltools
 
-.. image:: https://pypip.in/v/odltools/badge.png
+.. image:: https://img.shields.io/pypi/wheel/odltools.svg
    :target: https://pypi.python.org/pypi/odltools
 
-.. image:: https://pypip.in/wheel/odltools/badge.png
+.. image:: https://img.shields.io/pypi/l/odltools.svg
    :target: https://pypi.python.org/pypi/odltools
-   :alt: Wheel Status
 
-.. image:: https://pypip.in/license/odltools/badge.png
+.. image:: https://img.shields.io/pypi/pyversions/odltools.svg
    :target: https://pypi.python.org/pypi/odltools
-   :alt: License
+
+odltools
+========
 
 A tool to troubleshoot the NetVirt OpenDaylight OpenStack integration.
 
