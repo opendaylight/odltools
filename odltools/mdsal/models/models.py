@@ -7,6 +7,7 @@
 import logging
 
 from odltools.mdsal.models import elan
+from odltools.mdsal.models import entity_owners
 from odltools.mdsal.models import id_manager
 from odltools.mdsal.models import ietf_interfaces
 from odltools.mdsal.models import interface_service_bindings
@@ -56,6 +57,7 @@ class Models:
         self.args = None
         self.elan_elan_instances = None
         self.elan_elan_interfaces = None
+        self.entity_owners_entity_owners = None
         self.id_manager_id_pools = None
         self.ietf_interfaces_interfaces = None
         self.ietf_interfaces_interfaces_state = None
@@ -77,6 +79,7 @@ class Models:
         self.get_models(args, {
             "elan_elan_instances",
             "elan_elan_interfaces",
+            "entity_owners_entity_owners",
             "id_manager_id_pools",
             "ietf_interfaces_interfaces",
             "ietf_interfaces_interfaces_state",
@@ -100,6 +103,8 @@ class Models:
             self.elan_elan_instances = elan.elan_instances(Model.CONFIG, args)
         if "elan_elan_interfaces" in models:
             self.elan_elan_interfaces = elan.elan_interfaces(Model.CONFIG, args)
+        if "entity_owners_entity_owners" in models:
+            self.entity_owners_entity_owners = entity_owners.entity_owners(Model.OPERATIONAL, args)
         if "id_manager_id_pools" in models:
             self.id_manager_id_pools = id_manager.id_pools(Model.CONFIG, args)
         if "ietf_interfaces_interfaces" in models:
