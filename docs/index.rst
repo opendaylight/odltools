@@ -1,5 +1,20 @@
 .. _odltools-docs:
 
+.. image:: https://travis-ci.org/shague/odltools.png?branch=master
+   :target: https://travis-ci.org/shague/odltools
+
+.. image:: https://img.shields.io/pypi/v/odltools.svg
+   :target: https://pypi.python.org/pypi/odltools
+
+.. image:: https://img.shields.io/pypi/wheel/odltools.svg
+   :target: https://pypi.python.org/pypi/odltools
+
+.. image:: https://img.shields.io/pypi/l/odltools.svg
+   :target: https://pypi.python.org/pypi/odltools
+
+.. image:: https://img.shields.io/pypi/pyversions/odltools.svg
+   :target: https://pypi.python.org/pypi/odltools
+
 odltools Documentation
 ======================
 odltools needs some documentation.
