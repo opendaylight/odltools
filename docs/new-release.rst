@@ -3,6 +3,18 @@
 Building a new release of odltools
 ==================================
 
+.. note::
+
+   An experimental Makefile option is available. Use the below commands
+   to complete all the steps listed later in this document. The make
+   release target will create a branch <BRANCH>, tag, build and push
+   the pypi package to pypi. The user should run the tox tests against
+   the current branch before calling the make target. ::
+
+    make release <TAG> <BRANCH>
+
+    make release TAG=0.1.19 BRANCH=rel
+
 #. Update the Version ::
 
     vi odltools/__init__.py
