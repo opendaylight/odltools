@@ -86,6 +86,10 @@ def add_show_parser(parsers):
                         help="display less information")
     parser.set_defaults(func=show.show_neutron)
 
+    parser = parsers.add_parser("eos")
+    add_common_args(parser)
+    parser.set_defaults(func=show.show_eos)
+
 
 def add_parser(parsers):
     parser = parsers.add_parser("analyze")

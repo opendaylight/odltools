@@ -193,3 +193,26 @@ def show_neutron(args):
         print("\nneutron {}:\n".format(obj))
         data = config.gmodels.neutron_neutron.get_objects_by_key(obj=obj)
         print_neutron(args, obj, data)
+
+
+def print_entity_owners(args, owners):
+    print("entity                              owner (candidates)")
+    print("----------------------------------- ------------------")
+    for k, v in sorted(owners.items()):
+        entity = v.get('entity', {})[0]
+        owner = entity.get('owner')
+        candidate_list = ""
+        name = v.get('type')
+        if name.startswith('org.opendaylight'):
+            name = name[17:]
+        for candidate in entity.get('candidate', []):
+            candidate_list = '{}{},'.format(candidate_list, candidate.get('name'))
+        print("{:35} {} ({})".format(name, owner, candidate_list.rstrip(',')))
+
+
+def show_eos(args):
+    config.get_models(args, {"entity_owners_entity_owners"})
+    owners = config.gmodels.entity_owners_entity_owners.get_clist_by_key()
+    print("Entity Ownership Service")
+    print("========================")
+    print_entity_owners(args, owners)
