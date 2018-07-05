@@ -289,7 +289,8 @@ def get_flow_info_from_any(flow_info, flow):
                 flow_info['lport'] = int(lport, 16)
         if not serviceid:
             serviceid = get_service_id_from_metadata(metadata, mask)
-            flow_info['serviceid'] = int(serviceid, 16)
+            if serviceid:
+                flow_info['serviceid'] = int(serviceid, 16)
         if not elan:
             elan = get_elan_from_metadata(metadata, mask)
             if elan:

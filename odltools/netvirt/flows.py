@@ -44,7 +44,7 @@ def get_all_flows(args, modules=None, filter_by=None):
         "odl_l3vpn_vpn_instance_to_vpn_id",
         "odl_inventory_nodes"})
 
-    modules = modules if modules else "all"
+    modules = modules if modules else args.modules if args.modules else "all"
     filter_by = filter_by if filter_by else []
     if not modules:
         return 'No modules specified'
@@ -424,7 +424,7 @@ def show_dup_flows(args):
     einsts = config.gmodels.elan_elan_instances.get_clist_by_key()
     compute_map = config.gmodels.odl_inventory_nodes_operational.get_dpn_host_mapping()
 
-    flows = utils.sort(get_all_flows(args, ['elan']), 'table')
+    flows = utils.sort(get_all_flows(args), 'table')
     matches = collections.defaultdict(list)
     for flow in flows:
         dup_key = get_key_for_dup_detect(args, flow)
@@ -528,7 +528,7 @@ def show_all_flows(args):
         "odl_l3vpn_vpn_instance_to_vpn_id",
         "odl_inventory_nodes",
         "odl_inventory_nodes_operational"})
-    modules = [args.modules] if args.modules else tbls.get_all_modules()
+    modules = [args.modules] if args.modules else None
     dump_flows(args, modules)
 
 
