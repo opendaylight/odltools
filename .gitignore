@@ -1,5 +1,3 @@
-*.class
-**/target
 build
 _build
 bin/
@@ -8,10 +6,6 @@ products
 repository
 workspace
 *~
-target
-.classpath
-.project
-.settings
 MANIFEST.MF
 *.ipr
 *.iml
@@ -25,11 +19,6 @@ report.html
 target-ide/
 .vagrant
 .DS_Store
-.checkstyle
-.factorypath
-yang-gen-config
-yang-gen-sal
-maven-metadata-local.xml
 AUTHORS
 ChangeLog
 
