@@ -69,6 +69,12 @@ class NetworkTopology(Model):
             if extid.get("external-id-key") == "hostname":
                 return extid.get("external-id-value")
 
+    def get_local_ip_from_node(self, node):
+        extids = node.get("ovsdb:openvswitch-other-configs", {})
+        for extid in extids:
+            if extid.get("other-config-key") == "local_ip":
+                return extid.get("other-config-value")
+
     def get_datapathid_from_node(self, node):
         datapathid = node.get("ovsdb:datapath-id")
         if datapathid:
