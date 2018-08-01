@@ -36,8 +36,8 @@ import time
 
 from requests import exceptions
 
-import odltools.common.constants as con
-import odltools.common.odl_client as client
+from odltools.common import rest_client
+from odltools.monitor import constants
 
 
 class OdlMonitoringException(Exception):
@@ -57,15 +57,15 @@ class CursesWindow(object):
         stdscr.keypad(True)
         stdscr.nodelay(True)
         curses.start_color()
-        curses.init_pair(con.WHITE_ON_BLACK, curses.COLOR_WHITE,
+        curses.init_pair(constants.WHITE_ON_BLACK, curses.COLOR_WHITE,
                          curses.COLOR_BLACK)
-        curses.init_pair(con.WHITE_ON_GREEN, curses.COLOR_WHITE,
+        curses.init_pair(constants.WHITE_ON_GREEN, curses.COLOR_WHITE,
                          curses.COLOR_GREEN)
-        curses.init_pair(con.WHITE_ON_BLUE, curses.COLOR_WHITE,
+        curses.init_pair(constants.WHITE_ON_BLUE, curses.COLOR_WHITE,
                          curses.COLOR_BLUE)
-        curses.init_pair(con.WHITE_ON_YELLOW, curses.COLOR_WHITE,
+        curses.init_pair(constants.WHITE_ON_YELLOW, curses.COLOR_WHITE,
                          curses.COLOR_YELLOW)
-        curses.init_pair(con.BLACK_ON_YELLOW, curses.COLOR_BLACK,
+        curses.init_pair(constants.BLACK_ON_YELLOW, curses.COLOR_BLACK,
                          curses.COLOR_YELLOW)
         return stdscr
 
@@ -114,13 +114,13 @@ def size_and_color(cluster_roles, field_length, ip_addr):
     }
     # color map
     role_to_color = {
-        con.LEADER: curses.color_pair(con.WHITE_ON_GREEN),
-        con.FOLLOWER: curses.color_pair(con.WHITE_ON_BLUE),
-        con.CANDIDATE: curses.color_pair(con.BLACK_ON_YELLOW)
+        constants.LEADER: curses.color_pair(constants.WHITE_ON_GREEN),
+        constants.FOLLOWER: curses.color_pair(constants.WHITE_ON_BLUE),
+        constants.CANDIDATE: curses.color_pair(constants.BLACK_ON_YELLOW)
     }
 
     status_dict['color'] = role_to_color.get(
-        cluster_roles[ip_addr], curses.color_pair(con.DEFAULT_COLOR))
+        cluster_roles[ip_addr], curses.color_pair(constants.DEFAULT_COLOR))
     return status_dict
 
 
@@ -140,20 +140,20 @@ def cluster_monitor(stdscr, controllers, username, password, data_store,
                     excluded_shards=None):
     shards = set()
     (maxy, maxx) = stdscr.getmaxyx()
-    controller_len = con.MAX_CONTROLLER_NAME_LEN
+    controller_len = constants.MAX_CONTROLLER_NAME_LEN
     field_len = 0
     stdscr.addstr(len(controllers) + 3, 0,
                   'Polling controllers, please wait...',
-                  curses.color_pair(con.WHITE_ON_BLACK))
+                  curses.color_pair(constants.WHITE_ON_BLACK))
     stdscr.addstr(len(controllers) + 4, 0,
                   'Press q or use ctrl + c to quit.',
-                  curses.color_pair(con.WHITE_ON_BLACK))
+                  curses.color_pair(constants.WHITE_ON_BLACK))
     stdscr.refresh()
     # create rest clients for each controller
     for controller in controllers:
         url = ("http://{}:{}/jolokia/read".format(controller['ip'],
                                                   controller['port']))
-        controller['client'] = client.OpenDaylightRestClient(
+        controller['client'] = rest_client.RestClient(
             username=username, password=password, url=url, timeout=2)
 
     key = -1
@@ -217,19 +217,19 @@ def cluster_monitor(stdscr, controllers, username, password, data_store,
         for data_column, shard in enumerate(real_shards):
             stdscr.addstr(1, controller_len + 1 + (field_len + 1) *
                           data_column, shard.center(field_len),
-                          curses.color_pair(con.WHITE_ON_BLACK))
+                          curses.color_pair(constants.WHITE_ON_BLACK))
         # display controller and shard headers
         for row, controller in enumerate(controllers):
             addr = "{}:{}".format(controller['ip'], controller['port'])
             stdscr.addstr(row + 2, 0,
                           addr.center(controller_len),
-                          curses.color_pair(con.WHITE_ON_BLACK))
+                          curses.color_pair(constants.WHITE_ON_BLACK))
 
         stdscr.addstr(0, 0, 'Controller'.center(controller_len),
-                      curses.color_pair(con.WHITE_ON_BLACK))
+                      curses.color_pair(constants.WHITE_ON_BLACK))
         stdscr.addstr(0, max(controller_len + 1, 10),
                       'Shards/Status'.center(field_len),
-                      curses.color_pair(con.WHITE_ON_BLACK))
+                      curses.color_pair(constants.WHITE_ON_BLACK))
         stdscr.refresh()
 
         # display shard status

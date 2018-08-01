@@ -8,17 +8,18 @@ import logging
 
 from requests import sessions
 
-logger = logging.getLogger('common.odl_client')
+logger = logging.getLogger('common.rest_client')
 
 
-class OpenDaylightRestClient(object):
+class RestClient(object):
 
-    def __init__(self, url, username, password, timeout):
-        super(OpenDaylightRestClient, self).__init__()
+    def __init__(self, url, timeout, username=None, password=None):
+        super(RestClient, self).__init__()
         self.url = url
         self.timeout = timeout
         self.session = sessions.Session()
-        self.session.auth = (username, password)
+        if username is not None and password is not None:
+            self.session.auth = (username, password)
 
     def get(self, urlpath='', data=None):
         return self.request('get', urlpath, data)
