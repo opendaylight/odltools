@@ -146,7 +146,7 @@ def run(args):
     jobnames = args.jobnames or JOBNAMES
     numjobs = args.numjobs or NUMJOBS
     path = args.path or PATH
-    for jobname in jobnames.split():
+    for jobname in jobnames:
         url = args.url or LOGURL
         logger.info("Processing {} jobs at {}/{}".format(numjobs, url, jobname))
         reports_ = Reports(url, jobname)

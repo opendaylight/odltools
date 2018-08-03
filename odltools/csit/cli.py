@@ -23,7 +23,7 @@ def add_robot_parser(parsers):
 
 def add_reports_parser(parsers):
     parser = parsers.add_parser("reports", description="Write reports for test failures")
-    parser.add_argument("-j", "--jobnames",
+    parser.add_argument("-j", "--jobnames", nargs="+",
                         help="space separated list of job names")
     parser.add_argument("-n", "--numjobs", type=int,
                         help="number of jobs to analyzem default: 1")
