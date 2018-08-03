@@ -30,7 +30,7 @@ class Reports:
     def __init__(self, url, jobname):
         self.url = url
         self.jobname = jobname
-        self.job_list = []
+        self.jobs = {}
         self.failed_jobs = []
         self.restclient = rest_client.RestClient(url)
         self.reports = collections.OrderedDict()
@@ -38,6 +38,8 @@ class Reports:
         # ^([0-9]{2}.*) :: .*$ - captures suite name in the group 1
         # (^.*) \| (PASS|FAIL) \|$') - group 2 captures test name, group 3 captures PASS or FAIL
         self.re_tests = re.compile(r'^([0-9]{2}.*) :: .*$|(^.*) \| (PASS|FAIL) \|$')
+        self.re_time =\
+            re.compile(r'^Total elapsed time: ([0-9]:[0-9]{2}:[0-9]{2}), stacking time: ([0-9]:[0-9]{2}:[0-9]{2})$')
 
     def get_job_list(self, html):
         """
@@ -93,6 +95,10 @@ class Reports:
                     test.get("pass").append(jobno)
                 else:
                     test.get("fail").append(jobno)
+            else:
+                match = self.re_time.search(line)
+                if match:
+                    self.jobs[jobno] = {"total": match.group(1), "stack": match.group(2)}
         if len(suite) == 0:
             self.failed_jobs.append(jobno)
         return self.reports
@@ -113,24 +119,28 @@ class Reports:
             logger.error("{}".format(str(e)))
             return {}
         job_list_html = response.content.decode(response.encoding)
-        job_list = self.get_job_list(job_list_html)
-        self.job_list = job_list[-numjobs:]
-        for jobno in self.job_list:
+        job_list = self.get_job_list(job_list_html)[-numjobs:]
+        self.jobs = dict.fromkeys(job_list, {})
+        for jobno in self.jobs:
             urlpath = "{}/{}/{}".format(self.jobname, jobno, CONSOLE_LOG_GZ)
             console_log = self.get_console_log(urlpath)
             self.process_console_log(console_log, jobno)
         return self.reports
 
     def print_reports(self, path):
+        jobline = "{} {:4}  {:7}  {:7}\n"
         lines = [
             "{}\n".format(self.jobname),
-            "{}\n".format("=" * 90),
+            "{}/{}\n".format(self.url, self.jobname),
+            "{}\n".format("="*90),
             "failed jobs: {}\n".format(self.failed_jobs),
-            "all jobs:\n"
+            jobline.format("f", "job", "total", "stack"),
+            jobline.format("-", "-"*4, "-"*7, "-"*7, "-"*7),
         ]
-        for jobno in self.job_list:
-            urlpath = "{}/{}/{}".format(self.url, self.jobname, jobno)
-            lines.append("{} {}\n".format("*" if jobno in self.failed_jobs else " ", urlpath))
+
+        for jobno, timestamp in self.jobs.items():
+            lines.append(jobline.format("*" if jobno in self.failed_jobs else " ", jobno,
+                                        timestamp.get("total", "0:00:00"), timestamp.get("stack", "0:00:00")))
         for suitename, suite in self.reports.items():
             if suitename == "jobname":
                 continue

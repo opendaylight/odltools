@@ -25,3 +25,7 @@ Repeat Ping From Vm Instance2 To Vm Instance1 With net_2 VM Delete... | FAIL |
 ==============================================================================
 Output:  /w/workspace/netvirt-csit-1node-0cmb-1ctl-2cmp-openstack-queens-upstream-stateful-fluorine/output_04_security_group.xml
 Log:     /w/workspace/netvirt-csit-1node-0cmb-1ctl-2cmp-openstack-queens-upstream-stateful-fluorine/log_04_security_group.html
+++ dh=0
+++ printf %d:%02d:%02d 0 45 8
++ printf 'Total elapsed time: %s, stacking time: %s\n' 0:45:08 0:32:03
+Total elapsed time: 0:45:08, stacking time: 0:32:03
