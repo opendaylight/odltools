@@ -32,14 +32,17 @@ class Reports:
         self.jobname = jobname
         self.jobs = {}
         self.failed_jobs = []
+        self.failed_devstack = 0
+        self.failed_stack = 0
         self.restclient = rest_client.RestClient(url)
         self.reports = collections.OrderedDict()
         self.reports["jobname"] = jobname
         # ^([0-9]{2}.*) :: .*$ - captures suite name in the group 1
         # (^.*) \| (PASS|FAIL) \|$') - group 2 captures test name, group 3 captures PASS or FAIL
         self.re_tests = re.compile(r'^([0-9]{2}.*) :: .*$|(^.*) \| (PASS|FAIL) \|$')
-        self.re_time =\
-            re.compile(r'^Total elapsed time: ([0-9]:[0-9]{2}:[0-9]{2}), stacking time: ([0-9]:[0-9]{2}:[0-9]{2})$')
+        time_re = '^Total elapsed time: ([0-9]:[0-9]{2}:[0-9]{2}), stacking time: ([0-9]:[0-9]{2}:[0-9]{2})$'
+        stack_re = '^node ([0-2]) [0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}: stacking has failed$'
+        self.re_time_stack = re.compile(r'(' + time_re + '|' + stack_re + ')')
 
     def get_job_list(self, html):
         """
@@ -96,11 +99,17 @@ class Reports:
                 else:
                     test.get("fail").append(jobno)
             else:
-                match = self.re_time.search(line)
-                if match:
-                    self.jobs[jobno] = {"total": match.group(1), "stack": match.group(2)}
+                match = self.re_time_stack.search(line)
+                if match and match.group(2):
+                    self.jobs[jobno] = {"total": match.group(2), "stack": match.group(3)}
+                elif match and match.group(4):
+                    self.jobs[jobno] = {"stack failed": match.group(4)}
+                    self.failed_devstack += 1
         if len(suite) == 0:
             self.failed_jobs.append(jobno)
+            if self.jobs.get(jobno) == {}:
+                self.jobs[jobno] = {"stack failed": "*"}
+                self.failed_stack += 1
         return self.reports
 
     def get_reports(self, numjobs=1):
@@ -134,13 +143,15 @@ class Reports:
             "{}/{}\n".format(self.url, self.jobname),
             "{}\n".format("="*90),
             "failed jobs: {}\n".format(self.failed_jobs),
+            "number failed to stack:    {}\n".format(self.failed_stack),
+            "number failed to devstack: {}\n".format(self.failed_devstack),
             jobline.format("f", "job", "total", "stack"),
             jobline.format("-", "-"*4, "-"*7, "-"*7, "-"*7),
         ]
 
-        for jobno, timestamp in self.jobs.items():
-            lines.append(jobline.format("*" if jobno in self.failed_jobs else " ", jobno,
-                                        timestamp.get("total", "0:00:00"), timestamp.get("stack", "0:00:00")))
+        for jobno, job in self.jobs.items():
+            lines.append(jobline.format(job.get("stack failed", " "), jobno,
+                                        job.get("total", "0:00:00"), job.get("stack", "0:00:00")))
         for suitename, suite in self.reports.items():
             if suitename == "jobname":
                 continue
