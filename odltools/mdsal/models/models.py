@@ -11,6 +11,7 @@ from odltools.mdsal.models import entity_owners
 from odltools.mdsal.models import id_manager
 from odltools.mdsal.models import ietf_interfaces
 from odltools.mdsal.models import interface_service_bindings
+from odltools.mdsal.models import itm
 from odltools.mdsal.models import itm_state
 from odltools.mdsal.models import l3vpn
 from odltools.mdsal.models import mip
@@ -63,7 +64,9 @@ class Models:
         self.ietf_interfaces_interfaces_state = None
         self.interface_service_bindings_service_bindings = None
         self.itm_state_dpn_endpoints = None
+        self.itm_state_tunnel_list = None
         self.itm_state_tunnels_state = None
+        self.itm_transport_zones = None
         self.l3vpn_vpn_interfaces = None
         self.mip_mac = None
         self.network_topology_network_topology = None
@@ -84,7 +87,9 @@ class Models:
             "ietf_interfaces_interfaces",
             "ietf_interfaces_interfaces_state",
             "interface_service_bindings_service_bindings",
+            "itm_state_tunnel_list",
             "itm_state_tunnels_state",
+            "itm_transport_zones",
             "l3vpn_vpn_interfaces",
             "network_topology_network_topology",
             "network_topology_network_topology_operational",
@@ -116,14 +121,16 @@ class Models:
                 interface_service_bindings.service_bindings(Model.CONFIG, args)
         if "itm_state_dpn_endpoints" in models:
             self.itm_state_dpn_endpoints = itm_state.dpn_endpoints(Model.CONFIG, args)
+        if "itm_state_tunnel_list" in models:
+            self.itm_state_tunnel_list = itm_state.tunnel_list(Model.CONFIG, args)
         if "itm_state_tunnels_state" in models:
             self.itm_state_tunnels_state = itm_state.tunnels_state(Model.OPERATIONAL, args)
+        if "itm_transport_zones" in models:
+            self.itm_transport_zones = itm.transport_zones(Model.CONFIG, args)
         if "l3vpn_vpn_interfaces" in models:
             self.l3vpn_vpn_interfaces = l3vpn.vpn_interfaces(Model.CONFIG, args)
         if "mip_mac" in models:
             self.mip_mac = mip.mac(Model.CONFIG, args)
-        if "network_topology_network_topology" in models:
-            self.neutron_neutron = neutron.neutron(Model.CONFIG, args)
         if "network_topology_network_topology" in models:
             self.network_topology_network_topology = network_topology.network_topology(Model.CONFIG, args)
         if "network_topology_network_topology_operational" in models:

@@ -4,6 +4,8 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
+import collections
+
 from odltools.mdsal.models.model import Model
 
 MODULE = "itm-state"
@@ -15,6 +17,10 @@ def dpn_endpoints(store, args):
 
 def interfaces(store, args):
     return DpnTepsState(MODULE, store, args)
+
+
+def tunnel_list(store, args):
+    return TunnelList(MODULE, store, args)
 
 
 def tunnels_state(store, args):
@@ -70,3 +76,19 @@ class TunnelsState(Model):
     CONTAINER = "tunnels_state"
     CLIST = "state-tunnel-list"
     CLIST_KEY = "tunnel-interface-name"
+
+
+class TunnelList(Model):
+    CONTAINER = "tunnel-list"
+    CLIST = "internal-tunnel"
+    SRC_DPN = "source-DPN"
+    DST_DPN = "destination-DPN"
+
+    def get_tunnels_by_src_dst_dpn(self):
+        d = collections.defaultdict(dict)
+        tunnel_list = self.get_clist()
+        for tunnel in tunnel_list:
+            src_dpn = tunnel.get(self.SRC_DPN)
+            dst_dpn = tunnel.get(self.DST_DPN)
+            d[src_dpn][dst_dpn] = tunnel
+        return dict(d)
