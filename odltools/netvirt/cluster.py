@@ -6,6 +6,7 @@
 
 import logging
 
+from odltools.netvirt import capture_node_info
 from odltools.netvirt import config
 
 logger = logging.getLogger("netvirt.cluster")
@@ -49,3 +50,10 @@ def show_eos(args):
     print("Entity Ownership Service")
     print("========================")
     print_entity_owners(args, owners)
+
+
+def show_cluster_information(args):
+    print("===================")
+    print("Cluster Information")
+    print("===================")
+    print(capture_node_info.capture_node_info(args))

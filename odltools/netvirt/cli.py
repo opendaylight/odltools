@@ -90,6 +90,10 @@ def add_show_parser(parsers):
     add_common_args(parser)
     parser.set_defaults(func=show.show_eos)
 
+    parser = parsers.add_parser("cluster-info")
+    add_common_args(parser)
+    parser.set_defaults(func=show.show_cluster_information)
+
 
 def add_parser(parsers):
     parser = parsers.add_parser("analyze")

@@ -198,3 +198,7 @@ def show_neutron(args):
 
 def show_eos(args):
     cluster.show_eos(args)
+
+
+def show_cluster_information(args):
+    cluster.show_cluster_information(args)
