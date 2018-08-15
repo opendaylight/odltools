@@ -34,6 +34,10 @@ def add_analyze_parser(parsers):
     add_common_args(parser)
     parser.set_defaults(func=analyze.analyze_trunks)
 
+    parser = parsers.add_parser("tunnels")
+    add_common_args(parser)
+    parser.set_defaults(func=analyze.analyze_tunnels)
+
 
 def call_func(args):
     args.func2(args)

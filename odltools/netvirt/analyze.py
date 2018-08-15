@@ -4,6 +4,7 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
+
 from odltools.mdsal.models import constants
 from odltools.mdsal.models.model import Model
 from odltools.mdsal.models.neutron import Neutron
@@ -201,3 +202,74 @@ def analyze_nodes(args):
             print(pline.format(
                 port.get("portno"), port.get("mac"), port.get("name"),
                 port.get("ip"), port.get("uuid"), port.get("nmac")))
+
+
+def analyze_tunnels(args):
+    config.get_models(args, {
+        "ietf_interfaces_interfaces",
+        "ietf_interfaces_interfaces_state",
+        "itm_transport_zones",
+        "itm_state_tunnel_list",
+        "itm_state_tunnels_state",
+        "itm_state_dpn_endpoints",
+        "network_topology_network_topology",
+        "network_topology_network_topology_operational"})
+    t_zones = config.gmodels.itm_transport_zones.get_clist_by_key()
+    for k in t_zones:
+        t_zone = t_zones.get(k)
+        print("Analysing transport-zone:{}".format(k))
+        if not t_zone.get('subnets'):
+            print("..No subnets configured for TransportZone {}".format(k))
+            return
+        for subnet in t_zone.get('subnets'):
+            analyze_vteps(args, k, subnet, subnet.get('vteps', []))
+
+
+def analyze_vteps(args, tz_name, subnet, vteps):
+    # TODO: Support for direct tunnels
+    missing_endpoints = []
+    vtep_count = 0
+    endpoint_count = 0
+    tunnel_list = config.gmodels.itm_state_tunnel_list.get_tunnels_by_src_dst_dpn()
+    tunnel_names_list = []
+    for vtep in vteps:
+        vtep_count += 1
+        src_dpn = vtep.get('dpn-id')
+        tunnel_endpoint = config.gmodels.itm_state_dpn_endpoints.get_tunnel_endpoints(src_dpn)
+        src_tun_list = tunnel_list.get(src_dpn)
+        if not tunnel_endpoint:
+            missing_endpoints.append(vtep)
+        else:
+            endpoint_count += 1
+            for remote_vtep in vteps:
+                dst_dpn = remote_vtep.get('dpn-id')
+                if src_dpn == dst_dpn:
+                    continue
+                if not src_tun_list.get(dst_dpn):
+                    print("..Tunnel Missing between {} and {}", src_dpn, dst_dpn)
+                else:
+                    tunnel_names_list.extend(src_tun_list.get(dst_dpn).get('tunnel-interface-names'))
+    for vtep in missing_endpoints:
+        print("..TunnelEndpoint configuration missing for dpn:{},ip:{}", vtep.get('dpn-id'), vtep.get('ip-address'))
+    ifaces = config.gmodels.ietf_interfaces_interfaces.get_clist_by_key()
+    ifstates = config.gmodels.ietf_interfaces_interfaces_state.get_clist_by_key()
+    tunnel_states = config.gmodels.itm_state_tunnels_state.get_clist_by_key()
+    all_tunnels_up = True
+    for tunnel_name in tunnel_names_list:
+        if not ifaces.get(tunnel_name):
+            print("..TunnelInterface {} missing from config".format(tunnel_name))
+            all_tunnels_up = False
+        elif not ifstates.get(tunnel_name):
+            all_tunnels_up = False
+            print("..InterfaceState missing for tunnel {}".format(tunnel_name))
+        elif ifstates.get(tunnel_name).get('oper-status') != 'up':
+            all_tunnels_up = False
+            print("..Interface {} is down", tunnel_name)
+        elif not tunnel_states.get(tunnel_name):
+            all_tunnels_up = False
+            print("..TunnelState missing for {}".format(tunnel_name))
+        elif not tunnel_states.get(tunnel_name).get('tunnel-state'):
+            all_tunnels_up = False
+            print("..TunnelState for {} is False".format(tunnel_name))
+    if all_tunnels_up:
+        print("..All tunnels are up")
