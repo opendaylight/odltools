@@ -132,8 +132,9 @@ def get_dombroker_commit_stats(odl_client):
                                                                       "CommitStats", "AverageCommitTime")['value'])
     print("LongestCommitTime   = "+get_dom_broker_commit_stats_values(odl_client, "DOMDataBroker",
                                                                       "CommitStats", "LongestCommitTime")['value'])
-    print("ShortestCommitTime  = "+get_dom_broker_commit_stats_values(odl_client, "DOMDataBroker",
-                                                                      "CommitStats", "ShortestCommitTime")['value'])
+    print("ShortestCommitTime  = "
+          + get_dom_broker_commit_stats_values(odl_client, "DOMDataBroker",
+                                               "CommitStats", "ShortestCommitTime")['value']).encode("utf-8")
     print("TotalCommits        = {}".format(get_dom_broker_commit_stats_values(odl_client, "DOMDataBroker",
                                                                                "CommitStats", "TotalCommits")['value']))
 
