@@ -5,7 +5,6 @@
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
 import logging
-from pprint import pprint
 
 from requests import exceptions
 
@@ -168,7 +167,10 @@ def get_free_and_used_memory():
 
 def get_node_health_check_status(odl_client):
     url = ("akka:type=Cluster")
-    pprint(odl_client_request(odl_client, url))
+    cluster_health_info = odl_client_request(odl_client, url)
+    print("Cluster Members = {}".format((cluster_health_info['value'])['Members']))
+    print("Cluster Leader = {}".format((cluster_health_info['value'])['Leader']))
+    print("Unreachable Members = {}".format((cluster_health_info['value'])['Unreachable']))
 
 
 def get_karaf_lsof():
