@@ -246,7 +246,7 @@ def analyze_vteps(args, tz_name, subnet, vteps):
                 if src_dpn == dst_dpn:
                     continue
                 if not src_tun_list.get(dst_dpn):
-                    print("..Tunnel Missing between {} and {}", src_dpn, dst_dpn)
+                    print("..Tunnel Missing between {} and {}".format(src_dpn, dst_dpn))
                 else:
                     tunnel_names_list.extend(src_tun_list.get(dst_dpn).get('tunnel-interface-names'))
     for vtep in missing_endpoints:
@@ -264,7 +264,7 @@ def analyze_vteps(args, tz_name, subnet, vteps):
             print("..InterfaceState missing for tunnel {}".format(tunnel_name))
         elif ifstates.get(tunnel_name).get('oper-status') != 'up':
             all_tunnels_up = False
-            print("..Interface {} is down", tunnel_name)
+            print("..Interface {} is down".format(tunnel_name))
         elif not tunnel_states.get(tunnel_name):
             all_tunnels_up = False
             print("..TunnelState missing for {}".format(tunnel_name))
