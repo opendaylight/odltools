@@ -220,7 +220,7 @@ def analyze_tunnels(args):
         print("Analysing transport-zone:{}".format(k))
         if not t_zone.get('subnets'):
             print("..No subnets configured for TransportZone {}".format(k))
-            return
+            continue
         for subnet in t_zone.get('subnets'):
             analyze_vteps(args, k, subnet, subnet.get('vteps', []))
 
@@ -232,9 +232,15 @@ def analyze_vteps(args, tz_name, subnet, vteps):
     endpoint_count = 0
     tunnel_list = config.gmodels.itm_state_tunnel_list.get_tunnels_by_src_dst_dpn()
     tunnel_names_list = []
+    bridge_nodes = config.gmodels.network_topology_network_topology_operational.get_nodes_by_dpid()
+    missing_br_int_vteps = {}
+    for dpnid, node in bridge_nodes.iteritems():
+        if node.get('node-id').endswith('br-int'):
+            missing_br_int_vteps[dpnid] = node
     for vtep in vteps:
         vtep_count += 1
         src_dpn = vtep.get('dpn-id')
+        missing_br_int_vteps.pop(src_dpn)
         tunnel_endpoint = config.gmodels.itm_state_dpn_endpoints.get_tunnel_endpoints(src_dpn)
         src_tun_list = tunnel_list.get(src_dpn)
         if not tunnel_endpoint:
@@ -249,8 +255,9 @@ def analyze_vteps(args, tz_name, subnet, vteps):
                     print("..Tunnel Missing between {} and {}".format(src_dpn, dst_dpn))
                 else:
                     tunnel_names_list.extend(src_tun_list.get(dst_dpn).get('tunnel-interface-names'))
-    for vtep in missing_endpoints:
-        print("..TunnelEndpoint configuration missing for dpn:{},ip:{}", vtep.get('dpn-id'), vtep.get('ip-address'))
+    for dpnid, node in missing_br_int_vteps.iteritems():
+        node_name = node.get('node-id')[len('ovsdb://uuid/'):]
+        print("..{}:{} not present in vteps configured".format(dpnid, node_name))
     ifaces = config.gmodels.ietf_interfaces_interfaces.get_clist_by_key()
     ifstates = config.gmodels.ietf_interfaces_interfaces_state.get_clist_by_key()
     tunnel_states = config.gmodels.itm_state_tunnels_state.get_clist_by_key()
@@ -273,3 +280,5 @@ def analyze_vteps(args, tz_name, subnet, vteps):
             print("..TunnelState for {} is False".format(tunnel_name))
     if all_tunnels_up:
         print("..All tunnels are up")
+    for vtep in missing_endpoints:
+        print("..TunnelEndpoint configuration missing for dpn:{},ip:{}", vtep.get('dpn-id'), vtep.get('ip-address'))
