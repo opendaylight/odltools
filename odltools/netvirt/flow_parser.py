@@ -320,17 +320,25 @@ def get_flow_info_from_any(flow_info, flow):
 # Table specific parsing
 
 
+def get_tunnel_ifname_from_flowid(flow_id):
+    ifname = None
+    tun_index = flow_id.find('tun')
+    if tun_index > -1:
+        ifname = flow_id[tun_index:]
+    return ifname
+
+
 def get_ifname_from_flowid(flow_id, table):
-    splitter = ':' if table == 0 else '.'
-    # i = 2 if table == 0 else 1
-    i = 2
     ifname = None
     try:
-        ifname = flow_id.split(splitter)[i]
+        if table == 0:
+            ifname = get_tunnel_ifname_from_flowid(flow_id)
+            if not ifname:
+                ifname = ':'.join(flow_id.split(':')[2:])
+        else:
+            ifname = flow_id.split('.')[2]
     except IndexError:
-        tun_index = flow_id.find('tun')
-        if tun_index > -1:
-            ifname = flow_id[tun_index:]
+        ifname = get_tunnel_ifname_from_flowid(flow_id)
     return ifname
 
 
