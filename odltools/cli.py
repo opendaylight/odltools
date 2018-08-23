@@ -8,6 +8,7 @@ import argparse
 import sys
 
 from odltools import logg
+import odltools.bist.cli
 import odltools.csit.cli
 import odltools.flows.cli
 import odltools.karaf.cli
@@ -23,6 +24,8 @@ def create_parser():
     parser.add_argument("-V", "--version", action="version",
                         version="%(prog)s (version {version})".format(version=odltools.__version__))
     subparsers = parser.add_subparsers(dest="command", description="Command Tool")
+    subparsers.required = True
+    odltools.bist.cli.add_parser(subparsers)
     odltools.csit.cli.add_parser(subparsers)
     odltools.flows.cli.add_parser(subparsers)
     odltools.karaf.cli.add_parser(subparsers)
@@ -33,15 +36,15 @@ def create_parser():
     return parser
 
 
-def parse_args():
+def parse_args(args):
     parser = create_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     return args
 
 
-def main():
-    args = parse_args()
+def main(args=None):
+    args = parse_args(args)
     if args.verbose > 0:
         logg.debug()
     sys.exit(args.func(args))
