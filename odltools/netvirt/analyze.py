@@ -29,10 +29,10 @@ def by_ifname(args, ifname, ifstates, ifaces):
     port = None
     tunnel = None
     tun_state = None
-    if iface and iface.get('type') == constants.IFTYPE_VLAN:
+    if is_vlan_port(iface):
         ports = config.gmodels.neutron_neutron.get_objects_by_key(obj=Neutron.PORTS)
         port = ports.get(ifname)
-    elif iface and iface.get('type') == constants.IFTYPE_TUNNEL:
+    elif is_tunnel_port(iface):
         tun_states = config.gmodels.itm_state_tunnels_state.get_clist_by_key()
         tun_state = tun_states.get(ifname)
     else:
@@ -40,17 +40,33 @@ def by_ifname(args, ifname, ifstates, ifaces):
     return iface, ifstate, port, tunnel, tun_state
 
 
+def is_vlan_port(iface):
+    if iface and iface.get('type') == constants.IFTYPE_VLAN:
+        return True
+    return False
+
+
+def is_tunnel_port(iface):
+    if iface and iface.get('type') == constants.IFTYPE_TUNNEL:
+        return True
+    return False
+
+
+def is_patch_port(iface):
+    if iface and 'patch' in iface.get('name'):
+        return True
+    return False
+
+
 def analyze_interface(args):
     config.get_models(args, {
         "ietf_interfaces_interfaces",
         "ietf_interfaces_interfaces_state"})
+    if not args.ifname or args.ifname == 'all':
+        analyze_all_interfaces(args)
+        return
     ifaces = config.gmodels.ietf_interfaces_interfaces.get_clist_by_key()
     ifstates = config.gmodels.ietf_interfaces_interfaces_state.get_clist_by_key()
-
-    if not args.ifname:
-        print_keys(args, ifaces, ifstates)
-        return
-
     ifname = args.ifname
     iface, ifstate, port, tunnel, tunState = by_ifname(args, ifname, ifstates, ifaces)
     print("InterfaceConfig: \n{}".format(utils.format_json(args, iface)))
@@ -68,6 +84,30 @@ def analyze_interface(args):
         # nodeid = ncid[:ncid.rindex(':')]
         # analyze_inventory(nodeid, True, ncid, ifname)
         # analyze_inventory(nodeid, False, ncid, ifname)
+
+
+def analyze_all_interfaces(args):
+    ifaces = config.gmodels.ietf_interfaces_interfaces.get_clist_by_key()
+    ifstates = config.gmodels.ietf_interfaces_interfaces_state.get_clist_by_key()
+    print("\nAnalyzing all interfaces")
+    all_up = True
+    for ifname in ifaces:
+        iface, ifstate, nport, tunnel, tunState = by_ifname(args, ifname, ifstates, ifaces)
+        if not ifstate:
+            if not nport or (nport and 'network:' not in nport.get('device-owner')):
+                print("..ifState not found for {}".format(ifname))
+                all_up = False
+        elif ifstate.get('oper-status') != 'up':
+            print('..ifState for {} is {}'.format(ifname, ifstate.get('oper-status')))
+            all_up = False
+        if is_tunnel_port(iface) and not tunState:
+            print("..tunnelState not found for {}".format(ifname))
+            all_up = False
+        elif is_vlan_port(iface) and not is_patch_port(iface) and not nport:
+            print("..NeutronPort not found for {}".format(ifname))
+            all_up = False
+    if all_up:
+        print("..all interfaces are up")
 
 
 def analyze_trunks(args):
