@@ -21,7 +21,7 @@ class TestRobotFiles(unittest.TestCase):
     OUTPATH = "/tmp/robotjob"
 
     def setUp(self):
-        logg.Logger(logging.INFO, logging.INFO)
+        logg.Logger(logging.INFO, logging.DEBUG)
 
     def test_mk_outdir(self):
         self.robotfile = RobotFiles(self.DATAPATH, self.OUTPATH)

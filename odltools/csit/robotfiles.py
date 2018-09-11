@@ -10,7 +10,8 @@ import re
 from subprocess import Popen
 import xml.etree.cElementTree as ET
 
-from odltools.netvirt import ovs_flows
+from odltools.common import files
+from odltools.flows.ovs_flows import OvsFlowTable
 
 logger = logging.getLogger("csit.robotfiles")
 
@@ -260,9 +261,8 @@ class RobotFiles:
                 filename = ndir + "/" + self.fix_command_names(RobotFiles.DUMP_FLOWS)
                 logger.debug("Processing: %s", filename)
                 filename = filename + ".f.txt"
-                dump_flows = node[RobotFiles.DUMP_FLOWS]
-                fls = ovs_flows.Flows(dump_flows)
-                fls.write_fdata(filename)
+                flow_table = OvsFlowTable(node.get(RobotFiles.DUMP_FLOWS), "ovs", "dpid", "name")
+                files.writelines(filename, flow_table.fdata)
 
     def fix_command_names(self, cmd):
         return cmd.replace(" ", "_")

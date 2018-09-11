@@ -26,7 +26,7 @@ def add_reports_parser(parsers):
     parser.add_argument("-j", "--jobnames", nargs="+",
                         help="space separated list of job names")
     parser.add_argument("-n", "--numjobs", type=int,
-                        help="number of jobs to analyzem default: 1")
+                        help="number of jobs to analyze default: 1")
     parser.add_argument("-p", "--path",
                         help="the output directory for the reports, default: /tmp")
     parser.add_argument("-u", "--url",
