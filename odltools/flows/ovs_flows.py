@@ -27,8 +27,6 @@ logger = logging.getLogger("ovs.flows")
 class OvsFlow(Flow):
     def __init__(self, data):
         super(OvsFlow, self).__init__(data)
-        self.pdata = []
-        self.fdata = []
 
     def parse(self):
         """Parse the flow into a map."""
