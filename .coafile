@@ -19,7 +19,7 @@ bears =
 files = **/*.py
 max_line_length = 120
 ignore += incubator/ovsreplay/ovs-replay.py # nobody likes this file
-pydocstyle_ignore = D100, D101, D102, D103, D104, D105, D205, D208, D212, D400, D403
+pydocstyle_ignore = D100, D101, D102, D103, D104, D105, D203, D205, D208, D212, D400, D403
 
 [all.Python-bandit]
 # broken out to own section so ovs-replay can be ignored
