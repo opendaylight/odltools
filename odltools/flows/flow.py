@@ -59,6 +59,7 @@ class Flow(object):
     def __init__(self, data):
         self.rdata = data  # the raw data for the flow
         self.pdata = {}  # map of parsed elements from the flow
+        self.fdata = None  # line of formatted parsed data
 
     def parse(self):
         pass

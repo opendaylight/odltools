@@ -4,14 +4,13 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-
 from odltools.mdsal.models import constants
 from odltools.mdsal.models.model import Model
 from odltools.mdsal.models.neutron import Neutron
 from odltools.mdsal.models.opendaylight_inventory import Nodes
 from odltools.netvirt import config
-from odltools.netvirt import flow_parser
 from odltools.netvirt import flows
+from odltools.netvirt import inv_flow_parser
 from odltools.netvirt import utils
 
 
@@ -162,7 +161,7 @@ def analyze_trunks(args):
             print("\n------------------------------------")
             print("Analyzing Flow status for SubPorts")
             print("------------------------------------")
-            for flow in utils.sort(flows.get_all_flows(args, ['ifm'], ['vlanid']), 'ifname'):
+            for flow in flows.sort(flows.get_all_flows(args, ['ifm'], ['vlanid']), 'ifname'):
                 subport = subport_dict.get(flow.get('ifname')) or None
                 vlanid = subport.get('segmentation-id') if subport else None
                 ofport = subport.get('ofport') if subport else None
@@ -177,13 +176,13 @@ def analyze_trunks(args):
 
 
 def analyze_neutron_port(args, port, iface, ifstate):
-    for flow in utils.sort(flows.get_all_flows(args, ['all']), 'table'):
-        if ((flow.get('ifname') == port['uuid']) or
-                (flow.get('lport') and ifstate and flow['lport'] == ifstate.get('if-index')) or
-                (iface['name'] == flow.get('ifname'))):
-            result = utils.show_all(flow)
+    for flow in flows.sort(flows.get_all_flows(args, ['all']), 'table'):
+        if ((flow.pdata.get('ifname') == port['uuid']) or
+                (flow.pdata.get('lport') and ifstate and flow.pdata['lport'] == ifstate.get('if-index')) or
+                (iface['name'] == flow.pdata.get('ifname'))):
+            result = flows.show_all(flow)
             print(result)
-            print("Flow: {}".format(utils.format_json(None, flow_parser.parse_flow(flow.get('flow')))))
+            print("Flow: {}".format(utils.format_json(None, inv_flow_parser.parse_flow(flow.rdata))))
 
 
 def analyze_inventory(args):
@@ -213,7 +212,7 @@ def analyze_inventory(args):
     flowlist = sorted(flow_list, key=lambda x: x['table'])
     for flow in flowlist:
         print("Table: {}".format(flow['table']))
-        print("FlowId: {}, FlowName: {} ".format(flow['id'], 'FlowName:', flow.get('name')))
+        print("FlowId: {}, FlowName: {} ".format(flow['id'], flow.get('name')))
 
 
 def analyze_nodes(args):

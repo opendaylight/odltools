@@ -104,7 +104,7 @@ def get_data_path(res_type, data):
             data['interface-name'], data['service-mode'])
     elif res_type == 'flows':
         return 'opendaylight-inventory:nodes/node/openflow:{}/flow-node-inventory:table/{}/flow/{}'.format(
-            data['dpnid'], data['table'], data['id'])
+            data.pdata['dpnid'], data.rdata['table_id'], data.rdata['id'])
 
 
 def show_stale_bindings(args):
