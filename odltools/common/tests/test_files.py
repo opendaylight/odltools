@@ -9,7 +9,7 @@ import os
 import unittest
 
 from odltools import logg
-from odltools.netvirt import request
+from odltools.common import files
 from odltools.netvirt import tests
 
 
@@ -19,14 +19,14 @@ class TestRequest(unittest.TestCase):
         self.filename = "{}/flow_dumps.1.txt".format(tests.get_resources_path())
         self.outpath = "/tmp/flow_dumps.1.out.txt"
 
-    def test_read_file(self):
-        data = request.read_file(self.filename)
+    def test_readlines(self):
+        data = files.readlines(self.filename)
         self.assertEqual(len(data), 76)
 
-    def test_write_file(self):
-        data = request.read_file(self.filename)
+    def test_writelines(self):
+        data = files.readlines(self.filename)
         self.assertEqual(len(data), 76)
-        request.write_file(self.outpath, data)
+        files.writelines(self.outpath, data, True)
         self.assertTrue(os.path.exists(self.outpath))
 
 
