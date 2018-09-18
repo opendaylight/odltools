@@ -29,6 +29,11 @@ class TestRequest(unittest.TestCase):
         files.writelines(self.outpath, data, True)
         self.assertTrue(os.path.exists(self.outpath))
 
+    def test_read_json(self):
+        filename = "{}/config___elan__elan-instances.json".format(tests.get_resources_path())
+        data = files.read_json(filename)
+        self.assertEqual(len(data), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

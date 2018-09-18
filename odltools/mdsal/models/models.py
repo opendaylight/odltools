@@ -55,6 +55,8 @@ def singleton(cls):
 class Models:
 
     def __init__(self):
+        # List all the required models in alphabetical order.
+        # config is implied for all, add _operational for operational.
         self.args = None
         self.elan_elan_instances = None
         self.elan_elan_interfaces = None
@@ -77,29 +79,6 @@ class Models:
         self.odl_inventory_nodes = None
         self.odl_inventory_nodes_operational = None
         self.odl_l3vpn_vpn_instance_to_vpn_id = None
-
-    def get_all_models(self, args):
-        self.get_models(args, {
-            "elan_elan_instances",
-            "elan_elan_interfaces",
-            "entity_owners_entity_owners",
-            "id_manager_id_pools",
-            "ietf_interfaces_interfaces",
-            "ietf_interfaces_interfaces_state",
-            "interface_service_bindings_service_bindings",
-            "itm_state_tunnel_list",
-            "itm_state_tunnels_state",
-            "itm_transport_zones",
-            "l3vpn_vpn_interfaces",
-            "network_topology_network_topology",
-            "network_topology_network_topology_operational",
-            "neutron_neutron",
-            "odl_fib_fib_entries",
-            "odl_interface_meta_if_index_interface_map",
-            "odl_inventory_nodes",
-            "odl_inventory_nodes_operational",
-            "odl_l3vpn_vpn_instance_to_vpn_id"
-        })
 
     def get_models(self, args, models):
         self.args = args
@@ -163,7 +142,9 @@ def get_models(args):
         print("please enter a list of modules")
         return
 
+    url_root, url_path = model.make_url_parts(args, None)
+    model.init_rest_client(args.user, args.pw, url_root, 5)
     for resource in data_models:
         filename = model.make_filename_from_resource(args, resource)
-        url = model.make_url_from_resource(args, resource)
-        model.get_model_data(None, filename, url, args)
+        url_root, url_path = model.make_url_parts(args, resource)
+        model.get_model_data(None, filename, url_path, args)

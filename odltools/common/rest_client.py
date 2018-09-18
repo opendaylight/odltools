@@ -7,7 +7,10 @@
 import logging
 import os
 
+from requests import exceptions
 from requests import sessions
+
+from odltools.common import files
 
 logger = logging.getLogger('common.rest_client')
 
@@ -39,6 +42,25 @@ class RestClient(object):
         with open(local_filename, "wb") as fp:
             for chunk in response.iter_content(chunk_size=1024):
                 fp.write(chunk)
+
+    def get_json(self, urlpath):
+        response = self.request('get', urlpath)
+        try:
+            response.raise_for_status()
+        except exceptions.HTTPError as e:
+            # Whoops it wasn't a 200
+            logger.error("{}".format(str(e)))
+            return {}
+
+        try:
+            data = response.json()
+        except ValueError:
+            logger.exception("Failed to get url %s", urlpath)
+            return None
+
+        if logger.isEnabledFor(logging.DEBUG):
+            files.debug_print("get", urlpath, data)
+        return data
 
     def request(self, method, urlpath='', data=None, stream=False):
         headers = {'Content-Type': 'application/json'}

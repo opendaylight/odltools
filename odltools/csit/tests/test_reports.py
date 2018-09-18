@@ -19,7 +19,7 @@ JOBNAME = "netvirt-csit-1node-0cmb-1ctl-2cmp-openstack-queens-upstream-stateful-
 
 class TestReports(unittest.TestCase):
     def setUp(self):
-        logg.Logger(logging.DEBUG, logging.DEBUG)
+        logg.Logger(logging.INFO, logging.DEBUG)
         self.job_list_path = "{}/job_list.html".format(tests.get_resources_path())
         self.console_log_path = "{}/console.log".format(tests.get_resources_path())
         self.report = reports.Reports("https://logs.opendaylight.org/releng/vex-yul-odl-jenkins-1",

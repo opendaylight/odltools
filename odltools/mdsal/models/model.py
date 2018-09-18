@@ -7,7 +7,8 @@
 import json
 import logging
 
-import odltools.mdsal.request
+from odltools.common import files
+from odltools.common import rest_client
 
 logger = logging.getLogger("mdsal.model")
 
@@ -118,25 +119,45 @@ def make_url_from_resource(args, resource):
     return make_url(args.transport, args.ip, args.port, sm.store, sm.module, sm.name, sm.mid)
 
 
-def read_file(filename):
-    return odltools.mdsal.request.read_file(filename)
+def make_url_parts(args, resource=None):
+    url_root = "{}://{}:{}/restconf".format(args.transport, args.ip, args.port)
+    if resource is None:
+        url_path = None
+    else:
+        sm = SplitResource(resource)
+        if not sm.mid:
+            url_path = "{}/{}:{}".format(sm.store, sm.module, sm.name)
+        else:
+            url_path = "{}/{}:{}/{}".format(sm.store, sm.module, sm.name, sm.mid)
+    return url_root, url_path
 
 
-def get_from_odl(url, user, pw):
-    return odltools.mdsal.request.get(url, user, pw)
+odl_client = None
+
+
+def init_rest_client(user, pw, url, timeout):
+    global odl_client
+    if odl_client is None:
+        odl_client = rest_client.RestClient(username=user, password=pw, url=url, timeout=timeout)
+    return odl_client
+
+
+def get_from_odl(url):
+    global odl_client
+    return odl_client.get_json(url)
 
 
 def get_model_data(data, filename, url, args):
     if data is not None:
         return data
 
-    data = read_file(filename)
+    data = files.read_json(filename)
     if data is not None:
         return data
 
-    data = get_from_odl(url, args.user, args.pw)
+    data = get_from_odl(url)
     if data is not None:
-        odltools.mdsal.request.write_file(filename, data, args.pretty_print)
+        files.write_json(filename, data, args.pretty_print)
         return data
 
 
