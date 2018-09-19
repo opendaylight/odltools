@@ -8,6 +8,7 @@ import argparse
 
 from odltools import logg
 import odltools.csit.cli
+import odltools.flows.cli
 import odltools.karaf.cli
 import odltools.mdsal.cli
 import odltools.monitor.cli
@@ -22,6 +23,7 @@ def create_parser():
                         version="%(prog)s (version {version})".format(version=odltools.__version__))
     subparsers = parser.add_subparsers(dest="command", description="Command Tool")
     odltools.csit.cli.add_parser(subparsers)
+    odltools.flows.cli.add_parser(subparsers)
     odltools.karaf.cli.add_parser(subparsers)
     odltools.mdsal.cli.add_parser(subparsers)
     odltools.monitor.cli.add_parser(subparsers)

@@ -8,6 +8,7 @@ import logging
 from pprint import pformat
 import re
 
+from odltools.common import files
 from odltools.flows.flow import Flow
 from odltools.flows.flow import FlowTable
 from odltools.netvirt import tables
@@ -159,3 +160,9 @@ class OvsFlowTable(FlowTable):
                 i += 1
                 fline = "{:3} {}".format(i, flow.fdata)
                 self.fdata.append(fline)
+
+
+def run(args):
+    data = files.readlines(args.infile)
+    flow_table = OvsFlowTable(data, "ovs", "dpid", "name")
+    files.writelines(args.path + "/out.flow.txt", flow_table.fdata)

@@ -4,38 +4,54 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-from odltools.csit import reports
-from odltools.csit import robotfiles
+import argparse
+import sys
+
+import odltools
+from odltools.flows import ovs_flows
 
 
-def add_robot_parser(parsers):
-    parser = parsers.add_parser("file", description="Process and analyze CSIT robot output")
+def add_ovs_parser(parser):
+    parser = parser.add_parser("ovs", description="Parse ovs dump-flows", help="Parse ovs dump-flows")
     parser.add_argument("infile",
-                        help="XML output from a Robot test, e.g. output_01_l2.xml.gz")
+                        help="path to a file with output from ovs-ofctl dump-flows")
     parser.add_argument("path",
                         help="the directory that the parsed data is written into")
-    parser.add_argument("-g", "--gunzip", action="store_true",
-                        help="unzip the infile")
-    parser.add_argument("-d", "--dump", action="store_true",
-                        help="dump extra debugging, e.g. ovs metadata")
-    parser.set_defaults(func=robotfiles.run)
-
-
-def add_reports_parser(parsers):
-    parser = parsers.add_parser("reports", description="Write reports for test failures")
-    parser.add_argument("-j", "--jobnames", nargs="+",
-                        help="space separated list of job names")
-    parser.add_argument("-n", "--numjobs", type=int,
-                        help="number of jobs to analyze default: 1")
-    parser.add_argument("-p", "--path",
-                        help="the output directory for the reports, default: /tmp")
-    parser.add_argument("-u", "--url",
-                        help="root url for logs, default: https://logs.opendaylight.org/releng/vex-yul-odl-jenkins-1")
-    parser.set_defaults(func=reports.run)
+    parser.add_argument("-i", "--ip", default="localhost",
+                        help="switch ip address")
+    parser.add_argument("-t", "--port", default="22",
+                        help="switch restconf port, default: 22")
+    parser.add_argument("-u", "--user", default="admin",
+                        help="switch ssh username, default: admin")
+    parser.add_argument("-w", "--pw", default="admin",
+                        help="switch ssh password, default: admin")
+    parser.set_defaults(func=ovs_flows.run)
 
 
 def add_parser(parsers):
-    parser = parsers.add_parser("csit", description="Tools for processing CSIT data")
+    parser = parsers.add_parser("flows", description="Tools for processing flow dumps",
+                                help="Tools for processing flow dumps")
     subparsers = parser.add_subparsers(dest="subcommand")
-    add_robot_parser(subparsers)
-    add_reports_parser(subparsers)
+    add_ovs_parser(subparsers)
+
+
+def create_parser(program):
+    parser = argparse.ArgumentParser(prog=program, description="Tools for processing flow dumps")
+    parser.add_argument("-v", "--verbose", dest="verbose", action="count", default=0,
+                        help="verbosity (-v, -vv)")
+    parser.add_argument("-V", "--version", action="version",
+                        version="%(prog)s (version {version})".format(version=odltools.__version__))
+    subparsers = parser.add_subparsers(dest="subcommand")
+    add_ovs_parser(subparsers)
+    return parser
+
+
+def main(program=None, args=None, stream=sys.stderr):
+    parser = create_parser(program)
+    cli_args = parser.parse_args(args)
+    cli_args.func(cli_args)
+    return
+
+
+if __name__ == '__main__':
+    sys.exit(main())
