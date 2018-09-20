@@ -8,6 +8,12 @@ help:
 	@echo "  clean     ${clean_artifacts}"
 	@echo "  gitsetup  add commit-msg with signoff and pre-commit hooks"
 	@echo "  help      display this help and exit"
+	@echo "  release   build the current code and release the distribution"
+	@echo "            make release TAG=0.1.25 BRANCH=rel"
+	@echo "            - checkout rel-0.1.25"
+	@echo "            - update __version__ in __init__.py, tag the repo"
+	@echo "            - build the pypi distribution and upload"
+	@echo "            - push the commit and tags"
 
 clean:
 	rm -vrf ${clean_artifacts}
