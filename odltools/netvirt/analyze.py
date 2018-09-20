@@ -240,7 +240,7 @@ def analyze_nodes(args):
         for portno, port in sorted(ports.items()):
             print(pline.format(
                 port.get("portno"), port.get("mac"), port.get("name"),
-                port.get("ip"), port.get("uuid"), port.get("nmac")))
+                port.get("ip", ""), port.get("uuid"), port.get("nmac")))
 
 
 def analyze_tunnels(args):

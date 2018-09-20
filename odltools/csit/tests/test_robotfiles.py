@@ -28,7 +28,6 @@ class TestRobotFiles(unittest.TestCase):
         self.robotfile.mk_outdir()
         self.assertTrue(os.path.isdir(self.robotfile.outdir))
 
-    # @unittest.skip("skipping")
     def test_gunzip_xml_data_file(self):
         self.robotfile = RobotFiles(self.DATAPATH, self.OUTPATH)
         self.robotfile.mk_outdir()

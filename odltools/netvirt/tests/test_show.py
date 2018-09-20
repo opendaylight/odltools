@@ -41,29 +41,25 @@ class TestShow(unittest.TestCase):
     def test_show_stale_bindings(self):
         show.show_stale_bindings(self.args)
 
-    @unittest.skip("skipping")
-    # changed the show tables output to show names too
     def test_show_tables(self):
-        # TODO: different tables for Fluorine
-        expected = "[0, 17, 18, 19, 20, 21, 22, 23, 24, 36, 38, " \
-                   "43, 45, 48, 50, 51, 52, 55, 60, 80, 81, 210, " \
-                   "211, 212, 213, 214, 215, 216, 217, 90, 220, " \
-                   "239, 240, 241, 242, 243, 244, 245, 246, 247]\n"
+        table_0 = "0:INGRESS"
+        table_220 = "220:EG_LPORT_DISP"
         with capture.capture(show.show_tables, self.args) as output:
-            self.assertEqual(expected, output)
-        # print(output)
+            self.assertTrue(table_0 in output)
+            self.assertTrue(table_220 in output)
 
-    @unittest.skip("skipping")
-    # Test is broken
-    def test_show_idpools(self):
+    def test_show_idpools_cli(self):
         parser = root_cli.create_parser()
-        args = parser.parse_args(["show", "id-pools", "-p", "--path=" + tests.get_resources_path()])
+        args = parser.parse_args(["netvirt", "show", "id-pools", "-p",
+                                  "--path=" + tests.get_resources_path(),
+                                  "all"])
         with capture.capture(args.func, args) as output:
             self.assertTrue("interfaces" in output)
 
-    def test_show_neutron2(self):
+    def test_show_neutron_cli(self):
         parser = root_cli.create_parser()
-        args = parser.parse_args(["show", "neutron", "ports", "-p", "--path=" + tests.get_resources_path()])
+        args = parser.parse_args(["netvirt", "show", "neutron", "ports", "-p",
+                                  "--path=" + tests.get_resources_path()])
         with capture.capture(args.func, args) as output:
             self.assertTrue("8e3c262e-7b45-4222-ac4e-528db75e5516" in output)
 

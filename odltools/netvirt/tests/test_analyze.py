@@ -21,9 +21,9 @@ class TestAnalyze(unittest.TestCase):
         logg.Logger(logging.INFO, logging.INFO)
         self.args = tests.Args(path=tests.get_resources_path())
 
-    @unittest.skip("skipping")
     def test_analyze_trunks(self):
-        analyze.analyze_trunks(self.args)
+        with capture.capture(analyze.analyze_trunks, self.args) as output:
+            print(output)
 
     def test_analyze_interface(self):
         self.args.ifname = "98c2e265-b4f2-40a5-8f31-2fb5d2b2baf6"
@@ -41,10 +41,10 @@ class TestAnalyze(unittest.TestCase):
         with capture.capture(analyze.analyze_inventory, self.args) as output:
             self.assertTrue("Inventory Operational" in output)
 
-    @unittest.skip("skipping")
-    def test_analyze_nodes(self):
+    def test_analyze_nodes_cli(self):
         parser = root_cli.create_parser()
-        args = parser.parse_args(["analyze", "nodes", "-p", "--path=" + tests.get_resources_path()])
+        args = parser.parse_args(["netvirt", "analyze", "nodes", "-p",
+                                  "--path=" + tests.get_resources_path()])
         with capture.capture(args.func, args) as output:
             self.assertTrue("203251201875890" in output)
 
