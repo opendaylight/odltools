@@ -120,7 +120,7 @@ def analyze_trunks(args):
     ifaces = config.gmodels.ietf_interfaces_interfaces.get_clist_by_key()
     # ifstates = config.gmodels.ietf_interfaces_interfaces_state.get_clist_by_key()
     nports = config.gmodels.neutron_neutron.get_objects_by_key(obj=Neutron.PORTS)
-    ntrunks = config.gmodels.neutron_neutron.get_trunks_by_key()
+    ntrunks = config.gmodels.neutron_neutron.get_objects_by_key(obj=Neutron.TRUNKS)
     subport_dict = {}
     for v in ntrunks.values():
         nport = nports.get(v.get('port-id'))

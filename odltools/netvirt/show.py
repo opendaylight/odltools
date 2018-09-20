@@ -127,7 +127,7 @@ def show_tables(args):
         for table in node[Nodes.NODE_TABLE]:
             if table.get('flow'):
                 tableset.add(table['id'])
-    result = ''
+
     for table in (sorted(tableset)):
         result = '{:3}:{} '.format(table, tables.get_table_name(table))
         print(result)
