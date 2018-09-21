@@ -9,6 +9,7 @@ from pprint import pformat
 import re
 
 from odltools.common import files
+from odltools.common import ssh
 from odltools.flows.flow import Flow
 from odltools.flows.flow import FlowTable
 from odltools.netvirt import tables
@@ -40,7 +41,8 @@ class OvsFlow(Flow):
             return
 
         # Create a dictionary of all tokens in the flow.
-        self.pdata = {Flow.IDLE_TIMEOUT: "---", Flow.SEND_FLOW_REMOVED: "-"}
+        self.pdata[Flow.IDLE_TIMEOUT] = "---"
+        self.pdata[Flow.SEND_FLOW_REMOVED] = "-"
         tokens = self.rdata.split(" ")
         for token in tokens:
             # most lines are key=value so look for that pattern
@@ -93,7 +95,7 @@ class OvsFlow(Flow):
             logger.warn("Missing actions in %s", line)
             nactions = ""
 
-        self.fdata = "{:9} {:8} {:3} {:20} {:6} {:12} {:1} {:3} {:5} matches={} actions={}\n" \
+        self.fdata = "{:15}  {:10}  {:3} {:20} {:6} {:12}  {:1} {:3}  {:5}  matches={}  actions={}\n" \
             .format(line[Flow.COOKIE], line[Flow.DURATION],
                     line[Flow.TABLE], tables.get_table_name(int(line[Flow.TABLE])),
                     line[Flow.N_PACKETS], line[Flow.N_BYTES],
@@ -147,10 +149,10 @@ class OvsFlowTable(FlowTable):
         if len(self.tables) == 0:
             logger.warn("There is no data to format")
             return
-        header = "{:3} {:9} {:8} {:20}     {:6} {:12} {:1} {:3} {:5} {} {}\n" \
+        header = "{:3}  {:15}  {:10} {:20}     {:6} {:12}  {:1} {:3}  {:5}  {}  {}\n" \
             .format("nnn", Flow.COOKIE, Flow.DURATION, Flow.TABLE, "n_pack", Flow.N_BYTES,
                     "S", "ito", "prio", Flow.MATCH, Flow.ACTIONS)
-        header_under = "{:3} {:9} {:8} {:20}     {:6} {:12} {:1} {:3} {:5} {:10}\n" \
+        header_under = "{:3}  {:15}  {:10} {:20}     {:6} {:12} {:1} {:3}  {:5}  {:14}\n" \
             .format("-"*3, "-"*9, "-"*8, "-"*20, "-"*6, "-"*12, "-"*1, "-"*3, "-"*5, "-"*10)
         # Add the header as the first two lines of formatted data
         self.fdata = [header, header_under]
@@ -163,6 +165,16 @@ class OvsFlowTable(FlowTable):
 
 
 def run(args):
-    data = files.readlines(args.infile)
-    flow_table = OvsFlowTable(data, "ovs", "dpid", "name")
-    files.writelines(args.path + "/out.flow.txt", flow_table.fdata)
+    if args.infile:
+        logger.info("Parsing {} into {}".format(args.infile, args.outfile))
+        data = files.readlines(args.infile)
+    else:
+        logger.info("Executing ssh {}@{}:{} -c sudo ovs-ofctl dump-flows br-int and parsing into {}"
+                    .format(args.ip, args.user, args.port, args.outfile))
+        data = ssh.execute(args.ip, args.port, args.user, args.pw, "sudo ovs-ofctl dump-flows br-int")
+
+    if data:
+        flow_table = OvsFlowTable(data, "ovs", "dpid", "name")
+
+        if flow_table and flow_table.fdata:
+            files.writelines(args.outfile, flow_table.fdata)

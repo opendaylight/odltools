@@ -29,6 +29,7 @@ bandit_skipped_tests = B108, # Test for insecure usage of tmp file/directory
     B313, # cElementTree
     B404, # Consider possible security implications associated with Popen module.
     B405, # cElementTree
+    B601, # Possible shell injection via Paramiko call, check inputs are properly sanitized.
     B602 # subprocess call with shell=True identified, security issue.
 ignore += incubator/ovsreplay/ovs-replay.py # bandit does not like this file
 

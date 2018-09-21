@@ -8,15 +8,16 @@ import argparse
 import sys
 
 import odltools
+from odltools import logg
 from odltools.flows import ovs_flows
 
 
 def add_ovs_parser(parser):
     parser = parser.add_parser("ovs", description="Parse ovs dump-flows", help="Parse ovs dump-flows")
-    parser.add_argument("infile",
+    parser.add_argument("outfile",
+                        help="the file the parsed data is written into")
+    parser.add_argument("--infile",
                         help="path to a file with output from ovs-ofctl dump-flows")
-    parser.add_argument("path",
-                        help="the directory that the parsed data is written into")
     parser.add_argument("-i", "--ip", default="localhost",
                         help="switch ip address")
     parser.add_argument("-t", "--port", default="22",
@@ -49,6 +50,9 @@ def create_parser(program):
 def main(program=None, args=None, stream=sys.stderr):
     parser = create_parser(program)
     cli_args = parser.parse_args(args)
+    logg.Logger()
+    if cli_args.verbose > 0:
+        logg.debug()
     cli_args.func(cli_args)
     return
 

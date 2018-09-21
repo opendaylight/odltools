@@ -4,21 +4,21 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-import logging
 import unittest
 
-from odltools import logg
 from odltools.flows import cli
 from odltools.netvirt import tests
 
 
-class TestOvsFlows(unittest.TestCase):
-    def setUp(self):
-        logg.Logger(logging.INFO, logging.INFO)
-
-    def test_flows_ovs(self):
+class TestOvsFlowsCli(unittest.TestCase):
+    def test_flows_ovs_file(self):
         infile = "{}/flow_dumps.1.txt".format(tests.get_resources_path())
-        args = ["ovs", infile, "/tmp"]
+        args = ["ovs", "--infile", infile, "/tmp/flow_dumps.1.out.txt"]
+        cli.main("ovs", args)
+
+    @unittest.skip("skipping")
+    def test_flows_ovs_ssh(self):
+        args = ["ovs", "--ip", "localhost", "--user", "shague", "--pw", "Bos46760!", "/tmp/flow_dumps.1.out.txt"]
         cli.main("ovs", args)
 
 

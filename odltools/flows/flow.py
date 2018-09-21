@@ -38,6 +38,26 @@ class FlowTable(object):
         return num
 
 
+flow_keys = {
+    "BARRIER": "barrier",
+    "COOKIE": "cookie",
+    "DURATION": "duration",
+    "TABLE": "table",
+    "N_PACKETS": "n_packets",
+    "N_BYTES": "n_bytes",
+    "MATCH": "match",
+    "ACTIONS": "actions",
+    "IDLE_TIMEOUT": "idle_timeout",
+    "SEND_FLOW_REMOVED": "send_flow_rem",
+    "PRIORITY": "priority",
+    "GOTO": "goto",
+    "RESUBMIT": "resubmit",
+    "FLOW_NAME": "flow-name",
+    "ID": "id",
+    "INSTRUCTIONS": "instructions"
+}
+
+
 class Flow(object):
     BARRIER = "barrier"
     COOKIE = "cookie"
@@ -58,8 +78,12 @@ class Flow(object):
 
     def __init__(self, data):
         self.rdata = data  # the raw data for the flow
-        self.pdata = {}  # map of parsed elements from the flow
+        self.pdata = self.pdata_init()  # map of parsed elements from the flow
         self.fdata = None  # line of formatted parsed data
 
     def parse(self):
         pass
+
+    def pdata_init(self):
+        pdata = {val: "" for key, val in flow_keys.items()}
+        return pdata
