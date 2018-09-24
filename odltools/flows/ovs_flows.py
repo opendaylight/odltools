@@ -115,7 +115,7 @@ class OvsFlowTable(FlowTable):
             data = data
         else:
             logger.error("init: data is not a supported type")
-            return
+            raise ValueError("init: data is not a supported type")
         super(OvsFlowTable, self).__init__(data, flow_type, dpnid, name)
         self.parse()
         self.format()
