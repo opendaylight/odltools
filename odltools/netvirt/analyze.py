@@ -282,6 +282,9 @@ def analyze_vteps(args, tz_name, subnet, vteps):
         missing_br_int_vteps.pop(src_dpn)
         tunnel_endpoint = config.gmodels.itm_state_dpn_endpoints.get_tunnel_endpoints(src_dpn)
         src_tun_list = tunnel_list.get(src_dpn)
+        if not src_tun_list:
+            print("..direct tunnels not supported yet")
+            return
         if not tunnel_endpoint:
             missing_endpoints.append(vtep)
         else:
