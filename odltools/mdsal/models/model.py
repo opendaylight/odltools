@@ -23,6 +23,7 @@ class Model:
     CLIST_KEY = "key"
 
     def __init__(self, modul, store, args, mid=None):
+        init_rest_client(args, 5)
         self.module = modul
         self.container = self.CONTAINER
         self.clist = self.CLIST
@@ -31,11 +32,11 @@ class Model:
         self.transport = args.transport
         self.ip = args.ip
         self.port = args.port
-        self.url = make_url(self.transport, self.ip, self.port, self.store, self.module, self.container, mid)
+        self.url_path = make_url_path(self.store, self.module, self.container, mid)
         self.path = args.path
         self.filename = make_filename(self.path, self.store, self.module, self.container, mid)
         self.data = None
-        self.data = get_model_data(self.data, self.filename, self.url, args)
+        self.data = get_model_data(self.data, self.filename, self.url_path, args)
         if self.data is None:
             logger.warning("Model data was not imported")
             self.data = {}
@@ -107,16 +108,16 @@ def make_filename_from_resource(args, resource):
     return make_filename(args.path, sm.store, sm.module, sm.name, sm.mid)
 
 
-def make_url(transport, ip, port, store, module, name, mid=None):
+def make_url_path(store, module, name, mid=None):
     if not mid:
-        return "{}://{}:{}/restconf/{}/{}:{}".format(transport, ip, port, store, module, name)
+        return "{}/{}:{}".format(store, module, name)
     else:
-        return "{}://{}:{}/restconf/{}/{}:{}/{}".format(transport, ip, port, store, module, name, mid)
+        return "{}/{}:{}/{}".format(store, module, name, mid)
 
 
-def make_url_from_resource(args, resource):
+def make_url_path_from_resource(resource):
     sm = SplitResource(resource)
-    return make_url(args.transport, args.ip, args.port, sm.store, sm.module, sm.name, sm.mid)
+    return make_url_path(sm.store, sm.module, sm.name, sm.mid)
 
 
 def make_url_parts(args, resource=None):
@@ -124,30 +125,27 @@ def make_url_parts(args, resource=None):
     if resource is None:
         url_path = None
     else:
-        sm = SplitResource(resource)
-        if not sm.mid:
-            url_path = "{}/{}:{}".format(sm.store, sm.module, sm.name)
-        else:
-            url_path = "{}/{}:{}/{}".format(sm.store, sm.module, sm.name, sm.mid)
+        url_path = make_url_path_from_resource(resource)
     return url_root, url_path
 
 
 odl_client = None
 
 
-def init_rest_client(user, pw, url, timeout):
+def init_rest_client(args, timeout=5):
     global odl_client
     if odl_client is None:
-        odl_client = rest_client.RestClient(username=user, password=pw, url=url, timeout=timeout)
+        url_root, url_path = make_url_parts(args, None)
+        odl_client = rest_client.RestClient(username=args.user, password=args.pw, url=url_root, timeout=timeout)
     return odl_client
 
 
-def get_from_odl(url):
+def get_from_odl(url_path):
     global odl_client
-    return odl_client.get_json(url)
+    return odl_client.get_json(url_path)
 
 
-def get_model_data(data, filename, url, args):
+def get_model_data(data, filename, url_path, args):
     if data is not None:
         return data
 
@@ -155,7 +153,7 @@ def get_model_data(data, filename, url, args):
     if data is not None:
         return data
 
-    data = get_from_odl(url)
+    data = get_from_odl(url_path)
     if data is not None:
         files.write_json(filename, data, args.pretty_print)
         return data

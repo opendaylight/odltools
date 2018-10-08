@@ -34,8 +34,9 @@ class TestCli(unittest.TestCase):
                 args2 = Args(path=tests.get_resources_path(), pretty_print=True)
                 filename = model.make_filename_from_resource(args2, res)
                 data = files.read(filename)
-                url = model.make_url_from_resource(self.args, res)
-                mrequests.register_uri('GET', url, text=data)
+                url_path = model.make_url_path_from_resource(res)
+                url_root, _ = model.make_url_parts(self.args, None)
+                mrequests.register_uri('GET', '/'.join((url_root, url_path)), text=data)
 
             models.get_models(self.args)
             # assert each model has been saved to a file

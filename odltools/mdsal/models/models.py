@@ -142,8 +142,7 @@ def get_models(args):
         print("please enter a list of modules")
         return
 
-    url_root, url_path = model.make_url_parts(args, None)
-    model.init_rest_client(args.user, args.pw, url_root, 5)
+    model.init_rest_client(args)
     for resource in data_models:
         filename = model.make_filename_from_resource(args, resource)
         url_root, url_path = model.make_url_parts(args, resource)
