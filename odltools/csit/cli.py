@@ -4,8 +4,23 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-from odltools.csit import reports
 from odltools.csit import robotfiles
+from odltools.csit.reports import console
+from odltools.csit.reports import excepts
+
+
+def add_exceptions_parser(parsers):
+    parser = parsers.add_parser("exceptions", description="Write reports for test exceptions",
+                                help="Write reports for test exceptions")
+    parser.add_argument("-j", "--jobnames", nargs="+",
+                        help="space separated list of job names")
+    parser.add_argument("-n", "--numjobs", type=int,
+                        help="number of jobs to analyze default: 1")
+    parser.add_argument("-p", "--path",
+                        help="the output directory for the reports, default: /tmp")
+    parser.add_argument("-u", "--url",
+                        help="root url for logs, default: https://logs.opendaylight.org/releng/vex-yul-odl-jenkins-1")
+    parser.set_defaults(func=excepts.run)
 
 
 def add_reports_parser(parsers):
@@ -19,7 +34,7 @@ def add_reports_parser(parsers):
                         help="the output directory for the reports, default: /tmp")
     parser.add_argument("-u", "--url",
                         help="root url for logs, default: https://logs.opendaylight.org/releng/vex-yul-odl-jenkins-1")
-    parser.set_defaults(func=reports.run)
+    parser.set_defaults(func=console.run)
 
 
 def add_robot_parser(parsers):
@@ -39,5 +54,6 @@ def add_robot_parser(parsers):
 def add_parser(parsers):
     parser = parsers.add_parser("csit", description="Tools for processing CSIT data")
     subparsers = parser.add_subparsers(dest="subcommand")
+    add_exceptions_parser(subparsers)
     add_reports_parser(subparsers)
     add_robot_parser(subparsers)
