@@ -136,7 +136,7 @@ class Reports:
             self.process_console_log(console_log, jobno)
         return self.reports
 
-    def print_reports(self, path):
+    def write_reports(self, path):
         jobline = "{} {:4}  {:7}  {:7}\n"
         lines = [
             "{}\n".format(self.jobname),
@@ -172,4 +172,4 @@ def run(args):
         logger.info("Processing {} jobs at {}/{}".format(numjobs, url, jobname))
         reports_ = Reports(url, jobname)
         reports_.get_reports(numjobs)
-        reports_.print_reports(path)
+        reports_.write_reports(path)
