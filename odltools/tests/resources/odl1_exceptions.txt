@@ -1,0 +1,43 @@
+============================================================
+Starting test: 09 vpn basic ipv6.09 vpn basic ipv6
+============================================================
+Starting test: 09 vpn basic ipv6.09 vpn basic ipv6.Delete L3VPN
+============================================================
+Starting test: 09 vpn basic ipv6.09 vpn basic ipv6.Create Multiple L3VPN
+----------------------------------------
+Exception was matched to: https://jira.opendaylight.org/browse/NETVIRT-1400
+2018-10-08T03:50:07,124 | WARN  | opendaylight-cluster-data-shard-dispatcher-1203 | ShardDataTree
+============================================================
+Starting test: 09 vpn basic ipv6.09 vpn basic ipv6
+============================================================
+Starting test: 11 arp learning.11 arp learning
+============================================================
+Starting test: 11 arp learning.11 arp learning.Verify Setup
+============================================================
+Starting test: 11 arp learning.11 arp learning.Verify GARP Requests
+============================================================
+Starting test: 11 arp learning.11 arp learning.Verify MIP Migration
+============================================================
+Starting test: 11 arp learning.11 arp learning
+----------------------------------------
+Exception was matched to: https://jira.opendaylight.org/browse/NETVIRT-1428
+2018-10-08T03:50:07,124 | WARN  | opendaylight-cluster-data-shard-dispatcher-1203 | ShardDataTree
+----------------------------------------
+Exception was matched to: https://jira.opendaylight.org/browse/NETVIRT-1429
+2018-10-08T03:50:07,124 | WARN  | opendaylight-cluster-data-shard-dispatcher-1203 | ShardDataTree
+============================================================
+Starting test: 15 vnibasedIpv6forwarding.15 vnibasedIpv6forwarding
+============================================================
+Starting test: 15 vnibasedIpv6forwarding.15 vnibasedIpv6forwarding.VNI Based IPv6 Forwarding
+============================================================
+Starting test: 15 vnibasedIpv6forwarding.15 vnibasedIpv6forwarding.VNI Based IPv6 Forwarding With BGPVPN Router Association
+============================================================
+Starting test: 15 vnibasedIpv6forwarding.15 vnibasedIpv6forwarding.VNI Based IPv6 Forwarding With Two Routers And BGPVPN With Irt Ert
+----------------------------------------
+Exception is new
+2018-10-11T14:10:50,373 | WARN  | opendaylight-cluster-data-akka.actor.default-dispatcher-2 | java.net.ConnectException
+----------------------------------------
+Exception is new
+2018-10-11T14:10:50,373 | WARN  | opendaylight-cluster-data-akka.actor.default-dispatcher-2 | java.net.ConnectException
+============================================================
+Starting test: 15 vnibasedIpv6forwarding.15 vnibasedIpv6forwarding
