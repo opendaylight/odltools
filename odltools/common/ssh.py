@@ -19,7 +19,10 @@ def execute(host, port=22, user="admin", pw="admin", cmd="echo"):
         client.connect(host, port=port, username=user, password=pw)
         stdin, stdout, stderr = client.exec_command(cmd)
         logger.debug("ssh {}@{}:{} -c {}\nstdin: {}\nstdout: {}\nstderr: {}\n"
-                     .format(user, host, port, cmd, stdin, stdout.read(), stderr.read()))
+                     .format(user, host, port, cmd,
+                             stdin,
+                             stdout.read() if stdout else None,
+                             stderr.read() if stderr else None))
         client.close()
     finally:
         client.close()
