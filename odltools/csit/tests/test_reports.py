@@ -61,7 +61,7 @@ class TestReports(unittest.TestCase):
             mrequests.register_uri('GET', console1_url, text=console_log)
             mrequests.register_uri('GET', console2_url, text=console_log)
             report.get_reports(2)
-            report.print_reports("/tmp")
+            report.write_reports("/tmp")
 
     @unittest.skip("skipping")
     def test_get_console_log_real(self):
@@ -69,13 +69,13 @@ class TestReports(unittest.TestCase):
         path = "{}/109/console.log.gz".format(JOBNAME)
         console_log = report.get_console_log(path)
         report.process_console_log(console_log, 109)
-        report.print_reports("/tmp")
+        report.write_reports("/tmp")
 
     @unittest.skip("skipping")
     def test_get_reports_real(self):
         report = reports.Reports(LOGURL, JOBNAME)
         report.get_reports(12)
-        report.print_reports("/tmp")
+        report.write_reports("/tmp")
 
 
 if __name__ == '__main__':
