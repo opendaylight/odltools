@@ -182,6 +182,28 @@ def print_neutron(args, obj, data):
         print(utils.format_json(args, data))
 
 
+def print_neutron_resource_count(args, objs):
+    print("\n=====================")
+    print("Total Resource Count")
+    print("=====================\n")
+
+    resources = {
+        Neutron.SECURITY_GROUPS: "Security Groups: {}",
+        Neutron.SECURITY_RULES: "Security Rules: {}",
+        Neutron.NETWORKS: "Networks: {}",
+        Neutron.SUBNETS: "Subnets: {}",
+        Neutron.PORTS: "Ports: {}",
+        Neutron.ROUTERS: "Routers: {}",
+        Neutron.FLOATINGIPS: "Floatingips: {}",
+        Neutron.TRUNKS: "Trunks: {}",
+        Neutron.BGPVPNS: "Bgpvpns: {}"
+    }
+
+    for obj in objs:
+        data = config.gmodels.neutron_neutron.get_objects_by_key(obj=obj)
+        print(resources.get(obj, "Count: 0").format(len(data)))
+
+
 def show_neutron(args):
     objs = []
     config.get_models(args, {"neutron_neutron"})
@@ -194,6 +216,7 @@ def show_neutron(args):
         print("\nneutron {}:\n".format(obj))
         data = config.gmodels.neutron_neutron.get_objects_by_key(obj=obj)
         print_neutron(args, obj, data)
+    print_neutron_resource_count(args, objs)
 
 
 def show_eos(args):
