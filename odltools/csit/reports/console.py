@@ -28,7 +28,7 @@ class ConsoleReports:
         self.failed_jobs = []
         self.failed_devstack = 0
         self.failed_stack = 0
-        self.restclient = rest_client.RestClient(url)
+        self.restclient = rest_client.RestClient(url, timeout=(5, 15))
         self.reports = collections.OrderedDict()
         self.reports["jobname"] = jobname
         # ^([0-9]{2}.*) :: .*$ - captures suite name in the group 1

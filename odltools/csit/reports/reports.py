@@ -42,6 +42,9 @@ def get_log_file(restclient, urlpath):
         # Whoops it wasn't a 200
         logger.error("{}".format(str(e)))
         return ""
+    except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, ValueError):
+        logger.error("timeout or ValueError")
+        return ""
     return response.content.decode(response.encoding)
 
 
@@ -54,13 +57,16 @@ def get_job_list(numjobs, jobname, restclient):
     :param int numjobs: the number of jobs to scrape
     :return dict: A dictionary of job numbers
     """
-    response = restclient.get(jobname)
     try:
+        response = restclient.get(jobname)
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         # Whoops it wasn't a 200
         logger.error("{}".format(str(e)))
-        return {}
+        return {}, -1, -1
+    except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, ValueError):
+        logger.error("timeout or ValueError")
+        return {}, -1, -1
     job_list_html = response.content.decode(response.encoding)
     job_list = extract_job_list_from_html(job_list_html)[-numjobs:]
     return OrderedDict.fromkeys(job_list, {}), job_list[0], job_list[-1]

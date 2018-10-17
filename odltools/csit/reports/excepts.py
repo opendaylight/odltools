@@ -25,7 +25,7 @@ class ExceptsReports:
         self.jobs = {}
         self.first_job = 0
         self.last_job = 0
-        self.restclient = rest_client.RestClient(url)
+        self.restclient = rest_client.RestClient(url, timeout=(5, 15))
         self.reports = collections.OrderedDict()
         # (.*?) - group(1): capture suite name
         # ((.*?)\.(.*)|.*)') - group(2): capture from second suite name to end of line
