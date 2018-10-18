@@ -50,8 +50,8 @@ class ExceptsReports:
         #     .Initial Ping To External Network PNF from Vm Instance 1
         # group(1): suite name
         # group(4): test name
-        suite = None
-        test = None
+        suite = {}
+        test = {}
         current_suitename = None
         for line in log.splitlines():
             match = self.re_tests.search(line)
