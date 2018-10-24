@@ -120,7 +120,7 @@
                     "openflow:234018835196237:3"
                 ],
                 "name": "tun999632b8289",
-                "oper-status": "down",
+                "oper-status": "up",
                 "phys-address": "c6:56:b1:92:b2:94",
                 "statistics": {
                     "discontinuity-time": "2018-04-12T13:53:24.910Z"
@@ -162,7 +162,7 @@
                     "openflow:132319289050514:3"
                 ],
                 "name": "tun94ecbe1efd8",
-                "oper-status": "down",
+                "oper-status": "up",
                 "phys-address": "1e:14:d5:16:f6:28",
                 "statistics": {
                     "discontinuity-time": "2018-04-12T13:53:24.913Z"
@@ -246,7 +246,7 @@
                     "openflow:74851789353527:2"
                 ],
                 "name": "tun03a2b920986",
-                "oper-status": "down",
+                "oper-status": "up",
                 "phys-address": "ce:76:70:76:98:99",
                 "statistics": {
                     "discontinuity-time": "2018-04-12T13:52:31.946Z"
@@ -288,7 +288,7 @@
                     "openflow:132319289050514:2"
                 ],
                 "name": "tun95fee4d7132",
-                "oper-status": "down",
+                "oper-status": "up",
                 "phys-address": "7e:bf:d4:f7:60:c3",
                 "statistics": {
                     "discontinuity-time": "2018-04-12T13:52:31.471Z"
@@ -386,7 +386,7 @@
                     "openflow:74851789353527:3"
                 ],
                 "name": "tunf68aef23130",
-                "oper-status": "down",
+                "oper-status": "up",
                 "phys-address": "4e:a7:9b:99:74:4f",
                 "statistics": {
                     "discontinuity-time": "2018-04-12T13:53:24.924Z"
@@ -400,7 +400,7 @@
                     "openflow:234018835196237:2"
                 ],
                 "name": "tundb1d8b295c1",
-                "oper-status": "down",
+                "oper-status": "up",
                 "phys-address": "36:1a:ef:92:a2:be",
                 "statistics": {
                     "discontinuity-time": "2018-04-12T13:53:24.403Z"

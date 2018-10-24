@@ -70,7 +70,7 @@ class TestItmState(unittest.TestCase):
 
     def test_get_tunnels_state(self):
         d = self.itm_state_tunnels_state.get_clist_by_key()
-        self.assertIsNotNone(d and d['tun428ee8c4fe7'])
+        self.assertIsNotNone(d and d['tun03a2b920986'])
 
 
 if __name__ == '__main__':

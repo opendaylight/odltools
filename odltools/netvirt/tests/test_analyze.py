@@ -48,6 +48,14 @@ class TestAnalyze(unittest.TestCase):
         with capture.capture(args.func, args) as output:
             self.assertTrue("203251201875890" in output)
 
+    def test_analyze_tunnels(self):
+        parser = root_cli.create_parser()
+        args = parser.parse_args(["netvirt", "analyze", "tunnels", "-p",
+                                  "--path=" + tests.get_resources_path()])
+        with capture.capture(args.func, args) as output:
+            self.assertTrue("..All" in output)
+            self.assertTrue("up" in output)
+
 
 if __name__ == '__main__':
     unittest.main()

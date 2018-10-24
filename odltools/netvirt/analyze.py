@@ -4,6 +4,8 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
+import logging
+
 from odltools.mdsal.models import constants
 from odltools.mdsal.models.model import Model
 from odltools.mdsal.models.neutron import Neutron
@@ -11,7 +13,10 @@ from odltools.mdsal.models.opendaylight_inventory import Nodes
 from odltools.netvirt import config
 from odltools.netvirt import flows
 from odltools.netvirt import inv_flow_parser
+from odltools.netvirt import tunnels
 from odltools.netvirt import utils
+
+logger = logging.getLogger("netvirt.analyze")
 
 
 def print_keys(args, ifaces, ifstates):
@@ -244,83 +249,67 @@ def analyze_nodes(args):
 
 
 def analyze_tunnels(args):
-    config.get_models(args, {
-        "ietf_interfaces_interfaces",
-        "ietf_interfaces_interfaces_state",
-        "itm_transport_zones",
-        "itm_state_tunnel_list",
-        "itm_state_tunnels_state",
-        "itm_state_dpn_endpoints",
-        "network_topology_network_topology",
-        "network_topology_network_topology_operational"})
+    tunnels.get_all_models(args)
     t_zones = config.gmodels.itm_transport_zones.get_clist_by_key()
-    for k in t_zones:
-        t_zone = t_zones.get(k)
-        print("Analysing transport-zone:{}".format(k))
-        if not t_zone.get('subnets'):
-            print("..No subnets configured for TransportZone {}".format(k))
-            continue
-        for subnet in t_zone.get('subnets'):
-            analyze_vteps(args, k, subnet, subnet.get('vteps', []))
-
-
-def analyze_vteps(args, tz_name, subnet, vteps):
-    # TODO: Support for direct tunnels
-    missing_endpoints = []
-    vtep_count = 0
-    endpoint_count = 0
-    tunnel_list = config.gmodels.itm_state_tunnel_list.get_tunnels_by_src_dst_dpn()
-    tunnel_names_list = []
-    bridge_nodes = config.gmodels.network_topology_network_topology_operational.get_nodes_by_dpid()
-    missing_br_int_vteps = {}
-    for dpnid, node in bridge_nodes.iteritems():
-        if node.get('node-id').endswith('br-int'):
-            missing_br_int_vteps[dpnid] = node
-    for vtep in vteps:
-        vtep_count += 1
-        src_dpn = vtep.get('dpn-id')
-        missing_br_int_vteps.pop(src_dpn)
-        tunnel_endpoint = config.gmodels.itm_state_dpn_endpoints.get_tunnel_endpoints(src_dpn)
-        src_tun_list = tunnel_list.get(src_dpn)
-        if not src_tun_list:
-            print("..direct tunnels not supported yet")
-            return
-        if not tunnel_endpoint:
-            missing_endpoints.append(vtep)
-        else:
-            endpoint_count += 1
-            for remote_vtep in vteps:
-                dst_dpn = remote_vtep.get('dpn-id')
-                if src_dpn == dst_dpn:
-                    continue
-                if not src_tun_list.get(dst_dpn):
-                    print("..Tunnel Missing between {} and {}".format(src_dpn, dst_dpn))
-                else:
-                    tunnel_names_list.extend(src_tun_list.get(dst_dpn).get('tunnel-interface-names'))
-    for dpnid, node in missing_br_int_vteps.iteritems():
-        node_name = node.get('node-id')[len('ovsdb://uuid/'):]
-        print("..{}:{} not present in vteps configured".format(dpnid, node_name))
     ifaces = config.gmodels.ietf_interfaces_interfaces.get_clist_by_key()
     ifstates = config.gmodels.ietf_interfaces_interfaces_state.get_clist_by_key()
     tunnel_states = config.gmodels.itm_state_tunnels_state.get_clist_by_key()
-    all_tunnels_up = True
-    for tunnel_name in tunnel_names_list:
-        if not ifaces.get(tunnel_name):
-            print("..TunnelInterface {} missing from config".format(tunnel_name))
+    ovsdb_config_tunnels = tunnels.get_ovsdb_tunnels(args, 'config')
+    ovsdb_oper_tunnels = tunnels.get_ovsdb_tunnels(args, 'operational')
+
+    for k in t_zones:
+        print("Analysing transport-zone:{}".format(k))
+        all_tunnels_up = True
+        vteps = tunnels.get_vteps(args, k)
+        if not vteps:
+            print("..No vteps configured for TransportZone {}".format(k))
+            continue
+        all_vteps = tunnels.check_vteps(args, vteps)
+        for dpnid, node in all_vteps['missing'].items():
             all_tunnels_up = False
-        elif not ifstates.get(tunnel_name):
+            node_name = node.get('node-id')[len('ovsdb://uuid/'):]
+            print("..{}:{} not present in vteps configured".format(dpnid, node_name))
+        all_endpoints = tunnels.get_tunnel_endpoints(args, all_vteps['present'])
+        for vtep in all_endpoints.get('missing'):
             all_tunnels_up = False
-            print("..InterfaceState missing for tunnel {}".format(tunnel_name))
-        elif ifstates.get(tunnel_name).get('oper-status') != 'up':
+            print("..Endpoint configuration missing for dpn:{},ip:{}", vtep.get('dpn-id'), vtep.get('ip-address'))
+        all_tunnels = tunnels.get_tunnels(args, all_vteps['present'])
+        for tunnel in all_tunnels.get('missing'):
             all_tunnels_up = False
-            print("..Interface {} is down".format(tunnel_name))
-        elif not tunnel_states.get(tunnel_name):
-            all_tunnels_up = False
-            print("..TunnelState missing for {}".format(tunnel_name))
-        elif not tunnel_states.get(tunnel_name).get('tunnel-state'):
-            all_tunnels_up = False
-            print("..TunnelState for {} is False".format(tunnel_name))
-    if all_tunnels_up:
-        print("..All tunnels are up")
-    for vtep in missing_endpoints:
-        print("..TunnelEndpoint configuration missing for dpn:{},ip:{}", vtep.get('dpn-id'), vtep.get('ip-address'))
+            src_vtep = tunnel.get('src-vtep')
+            dst_vtep = tunnel.get('dst-vtep')
+            print("..Tunnel Missing between {} and {}".format(src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+        for tunnel_name, tep_pair in all_tunnels.get('present').items():
+            src_vtep = tep_pair.get('src-vtep')
+            dst_vtep = tep_pair.get('dst-vtep')
+            if not ifaces.get(tunnel_name):
+                print("..TunnelInterface {} between {} and {} missing from config".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+                all_tunnels_up = False
+            elif not ovsdb_config_tunnels.get(tunnel_name):
+                print("..TerminationPoint {} between {} and {} missing from config".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+                all_tunnels_up = False
+            elif not ovsdb_oper_tunnels.get(tunnel_name):
+                print("..TerminationPoint {} between {} and {} missing from config".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+                all_tunnels_up = False
+            elif not ifstates.get(tunnel_name):
+                all_tunnels_up = False
+                print("..InterfaceState missing for tunnel {} between {} and {}".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+            elif ifstates.get(tunnel_name).get('oper-status') != 'up':
+                all_tunnels_up = False
+                print("..Interface {} is down between {} and {}".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+            elif not tunnel_states.get(tunnel_name):
+                all_tunnels_up = False
+                print("..TunnelState missing for {} between {} and {}".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+            elif not tunnel_states.get(tunnel_name).get('tunnel-state'):
+                all_tunnels_up = False
+                print("..TunnelState is False for {} between {} and {}".format(
+                    tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
+        if all_tunnels_up:
+            logger.info("All tunnels are up")
+            print("..All Tunnels are up")

@@ -1,0 +1,40 @@
+{
+    "transport-zones": {
+        "transport-zone": [
+            {
+                "subnets": [
+                    {
+                        "vlan-id": 0,
+                        "vteps": [
+                            {
+                                "portname": "",
+                                "dpn-id": 234018835196237,
+                                "weight": 1,
+                                "option-of-tunnel": false,
+                                "ip-address": "10.30.170.92"
+                            },
+                            {
+                                "portname": "",
+                                "dpn-id": 74851789353527,
+                                "weight": 1,
+                                "option-of-tunnel": false,
+                                "ip-address": "10.30.170.90"
+                            },
+                            {
+                                "portname": "",
+                                "dpn-id": 132319289050514,
+                                "weight": 1,
+                                "option-of-tunnel": false,
+                                "ip-address": "10.30.170.17"
+                            }
+                        ],
+                        "prefix": "255.255.255.255/32",
+                        "gateway-ip": "0.0.0.0"
+                    }
+                ],
+                "tunnel-type": "odl-interface:tunnel-type-vxlan",
+                "zone-name": "default-transport-zone"
+            }
+        ]
+    }
+}

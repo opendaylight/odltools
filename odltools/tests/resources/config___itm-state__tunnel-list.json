@@ -1,0 +1,62 @@
+{
+    "tunnel-list": {
+        "internal-tunnel": [
+            {
+                "source-DPN": 234018835196237,
+                "tunnel-interface-names": [
+                    "tun999632b8289"
+                ],
+                "destination-DPN": 74851789353527,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "source-DPN": 132319289050514,
+                "tunnel-interface-names": [
+                    "tun94ecbe1efd8"
+                ],
+                "destination-DPN": 234018835196237,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "source-DPN": 74851789353527,
+                "tunnel-interface-names": [
+                    "tun03a2b920986"
+                ],
+                "destination-DPN": 132319289050514,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "source-DPN": 132319289050514,
+                "tunnel-interface-names": [
+                    "tun95fee4d7132"
+                ],
+                "destination-DPN": 74851789353527,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "source-DPN": 74851789353527,
+                "tunnel-interface-names": [
+                    "tunf68aef23130"
+                ],
+                "destination-DPN": 234018835196237,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "source-DPN": 277163141951873,
+                "tunnel-interface-names": [
+                    "tun08da2467b30"
+                ],
+                "destination-DPN": 211154069404921,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "source-DPN": 234018835196237,
+                "tunnel-interface-names": [
+                    "tundb1d8b295c1"
+                ],
+                "destination-DPN": 132319289050514,
+                "transport-type": "odl-interface:tunnel-type-vxlan"
+            }
+        ]
+    }
+}
