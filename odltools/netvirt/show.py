@@ -204,11 +204,46 @@ def print_neutron_resource_count(args, objs):
         print(resources.get(obj, "Count: 0").format(len(data)))
 
 
+def print_unused_neutron_resource(args):
+    try:
+        check_unused_resources_type = [Neutron.SECURITY_GROUPS]
+
+        all_security_groups = config.gmodels.neutron_neutron.get_objects_by_key(obj=Neutron.SECURITY_GROUPS)
+        all_ports = config.gmodels.neutron_neutron.get_objects_by_key(obj=Neutron.PORTS)
+
+        for re_type in check_unused_resources_type:
+            if (re_type == Neutron.SECURITY_GROUPS):
+                sec_group_ids_in_ports = []
+                if all_ports:
+                    for port_key, port_value in all_ports.items():
+                        if 'security-groups' in port_value:
+                            security_groups_in_port = port_value['security-groups']
+                            if security_groups_in_port:
+                                for group in security_groups_in_port:
+                                    sec_group_ids_in_ports.append(group)
+
+                unused_sec_group_ids = (list(set(all_security_groups.keys()) -
+                                             set(sec_group_ids_in_ports)))
+                if unused_sec_group_ids:
+                    print("\n========================")
+                    print("Unused Security Groups")
+                    print("========================\n")
+                    print("{:40} {:40} {:40}".format('ID', 'NAME', 'TENANT'))
+                for unused_sec_group_id in unused_sec_group_ids:
+                    print("{:40} {:40} {:40}".format(unused_sec_group_id,
+                                                     all_security_groups[unused_sec_group_id].get('name'),
+                                                     all_security_groups[unused_sec_group_id].get('tenant-id')))
+    except Exception as ex:
+        print('Failed in detecting Unused resources.')
+
+
 def show_neutron(args):
     objs = []
     config.get_models(args, {"neutron_neutron"})
     if args.object == "all":
         objs = Neutron.ALL_OBJECTS
+    elif args.object == "unused-security-groups":
+        print_unused_neutron_resource(args)
     else:
         objs.append(args.object)
 
@@ -216,7 +251,8 @@ def show_neutron(args):
         print("\nneutron {}:\n".format(obj))
         data = config.gmodels.neutron_neutron.get_objects_by_key(obj=obj)
         print_neutron(args, obj, data)
-    print_neutron_resource_count(args, objs)
+    if objs:
+        print_neutron_resource_count(args, objs)
 
 
 def show_eos(args):
