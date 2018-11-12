@@ -1,0 +1,66 @@
+{
+    "dpn-teps-state": {
+        "dpns-teps": [
+            {
+                "remote-dpns": [
+                    {
+                        "destination-dpn-id": 234018835196237,
+                        "internal": true,
+                        "monitoring-enabled": true,
+                        "monitoring-interval": 5000,
+                        "tunnel-name": "tun94ecbe1efd8"
+                    },
+                    {
+                        "destination-dpn-id": 74851789353527,
+                        "internal": true,
+                        "monitoring-enabled": true,
+                        "monitoring-interval": 5000,
+                        "tunnel-name": "tun95fee4d7132"
+                    }
+                ],
+                "source-dpn-id": 132319289050514,
+                "tunnel-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "remote-dpns": [
+                    {
+                        "destination-dpn-id": 132319289050514,
+                        "internal": true,
+                        "monitoring-enabled": true,
+                        "monitoring-interval": 5000,
+                        "tunnel-name": "tundb1d8b295c1"
+                    },
+                    {
+                        "destination-dpn-id": 74851789353527,
+                        "internal": true,
+                        "monitoring-enabled": true,
+                        "monitoring-interval": 5000,
+                        "tunnel-name": "tun999632b8289"
+                    }
+                ],
+                "source-dpn-id": 234018835196237,
+                "tunnel-type": "odl-interface:tunnel-type-vxlan"
+            },
+            {
+                "remote-dpns": [
+                    {
+                        "destination-dpn-id": 234018835196237,
+                        "internal": true,
+                        "monitoring-enabled": true,
+                        "monitoring-interval": 5000,
+                        "tunnel-name": "tunf68aef23130"
+                    },
+                    {
+                        "destination-dpn-id": 132319289050514,
+                        "internal": true,
+                        "monitoring-enabled": true,
+                        "monitoring-interval": 5000,
+                        "tunnel-name": "tun03a2b920986"
+                    }
+                ],
+                "source-dpn-id": 74851789353527,
+                "tunnel-type": "odl-interface:tunnel-type-vxlan"
+            }
+        ]
+    }
+}

@@ -62,6 +62,9 @@ class DpnEndpoints(Model):
 class DpnTepsState(Model):
     CONTAINER = "dpn-teps-state"
     CLIST = "dpns-teps"
+    SRC_DPN = "source-dpn-id"
+    DST_DPN = "destination-dpn-id"
+    REMOTE_DPNS = "remote-dpns"
 
     def get_tuninterfaces_by_name(self):
         d = {}
@@ -70,6 +73,16 @@ class DpnTepsState(Model):
             for remotedpn in sourcedpn['remote-dpns']:
                 d[remotedpn['tunnel-name']] = remotedpn
         return d
+
+    def get_tunnels_by_src_dst_dpn(self):
+        d = collections.defaultdict(dict)
+        tunnel_list = self.get_clist()
+        for tunnel in tunnel_list:
+            src_dpn = tunnel.get(self.SRC_DPN)
+            for remote_dpn in tunnel.get(self.REMOTE_DPNS):
+                dst_dpn = remote_dpn.get(self.DST_DPN)
+                d[src_dpn][dst_dpn] = remote_dpn
+        return dict(d)
 
 
 class TunnelsState(Model):

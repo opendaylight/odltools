@@ -256,7 +256,7 @@ def analyze_tunnels(args):
     tunnel_states = config.gmodels.itm_state_tunnels_state.get_clist_by_key()
     ovsdb_config_tunnels = tunnels.get_ovsdb_tunnels(args, 'config')
     ovsdb_oper_tunnels = tunnels.get_ovsdb_tunnels(args, 'operational')
-
+    direct_tunnels = tunnels.is_direct_tunnels(args)
     for k in t_zones:
         print("Analysing transport-zone:{}".format(k))
         all_tunnels_up = True
@@ -274,6 +274,10 @@ def analyze_tunnels(args):
             all_tunnels_up = False
             print("..Endpoint configuration missing for dpn:{},ip:{}", vtep.get('dpn-id'), vtep.get('ip-address'))
         all_tunnels = tunnels.get_tunnels(args, all_vteps['present'])
+        if not all_tunnels:
+            logger.error("Tunnel configuration missing")
+            print("Tunnel configuration missing")
+            all_tunnels_up = False
         for tunnel in all_tunnels.get('missing'):
             all_tunnels_up = False
             src_vtep = tunnel.get('src-vtep')
@@ -282,7 +286,7 @@ def analyze_tunnels(args):
         for tunnel_name, tep_pair in all_tunnels.get('present').items():
             src_vtep = tep_pair.get('src-vtep')
             dst_vtep = tep_pair.get('dst-vtep')
-            if not ifaces.get(tunnel_name):
+            if not direct_tunnels and not ifaces.get(tunnel_name):
                 print("..TunnelInterface {} between {} and {} missing from config".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
                 all_tunnels_up = False
@@ -294,11 +298,11 @@ def analyze_tunnels(args):
                 print("..TerminationPoint {} between {} and {} missing from config".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
                 all_tunnels_up = False
-            elif not ifstates.get(tunnel_name):
+            elif not direct_tunnels and not ifstates.get(tunnel_name):
                 all_tunnels_up = False
                 print("..InterfaceState missing for tunnel {} between {} and {}".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
-            elif ifstates.get(tunnel_name).get('oper-status') != 'up':
+            elif not direct_tunnels and ifstates.get(tunnel_name).get('oper-status') != 'up':
                 all_tunnels_up = False
                 print("..Interface {} is down between {} and {}".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))

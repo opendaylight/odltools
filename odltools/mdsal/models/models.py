@@ -68,6 +68,7 @@ class Models:
         self.itm_state_dpn_endpoints = None
         self.itm_state_tunnel_list = None
         self.itm_state_tunnels_state = None
+        self.itm_state_dpn_teps_state = None
         self.itm_transport_zones = None
         self.l3vpn_vpn_interfaces = None
         self.mip_mac = None
@@ -104,6 +105,8 @@ class Models:
             self.itm_state_tunnel_list = itm_state.tunnel_list(Model.CONFIG, args)
         if "itm_state_tunnels_state" in models:
             self.itm_state_tunnels_state = itm_state.tunnels_state(Model.OPERATIONAL, args)
+        if "itm_state_dpn_teps_state" in models:
+            self.itm_state_dpn_teps_state = itm_state.interfaces(Model.CONFIG, args)
         if "itm_transport_zones" in models:
             self.itm_transport_zones = itm.transport_zones(Model.CONFIG, args)
         if "l3vpn_vpn_interfaces" in models:
