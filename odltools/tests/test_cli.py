@@ -4,9 +4,13 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
+import argparse
 import unittest
 
+import six
+
 from odltools import cli
+from odltools.bist import cli as bist_cli
 from odltools.csit import robotfiles
 
 try:
@@ -57,6 +61,23 @@ class TestOdltools(unittest.TestCase):
 
         cli.main()
         exit_mock.assert_called_with(42)
+
+    @mock.patch('sys.exit', new=mock.Mock())
+    @mock.patch.object(bist_cli, 'run_bist')
+    def test_bist_command_calls_run_bist_with_args(self, mock_run_bist):
+        cli.main(args=['bist'])
+        args, kwargs = mock_run_bist.call_args
+        self.assertIsInstance(args[0], argparse.Namespace)
+
+    @mock.patch('sys.exit', new=mock.Mock())
+    @mock.patch.object(bist_cli, 'run_bist', new=mock.Mock())
+    def test_bist_command_help_prints_help(self):
+        for arg in ('-h', '--help'):
+            stream = six.StringIO()
+            with mock.patch('sys.stdout', new=stream):
+                args = ('bist', arg)
+                cli.main(args=args)
+            self.assertTrue(stream.getvalue().startswith('usage: '))
 
 
 if __name__ == '__main__':

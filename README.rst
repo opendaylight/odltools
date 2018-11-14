@@ -21,6 +21,9 @@ A tool to troubleshoot the NetVirt OpenDaylight OpenStack integration.
 The tool can fetch mdsal model dumps, openvswitch flow dumps
 and extract dumps from CSIT output.xml files.
 
+It also provides a set of BIST (built-in self-tests) that provide a
+starting point for debugging an ODL deployment.
+
 odltool's documentation can be found at `Read The Docs <http://odltools.readthedocs.org>`_.
 
 Requirements
@@ -39,19 +42,21 @@ Usage
 -----
 ::
 
-  usage: python -m odltools [-h] [-v] [-V] {csit,model,analyze} ...
+   usage: python -m odltools [-h] [-v] [-V]
+                             {bist,csit,karaf,model,monitor,analyze,show} ...
 
-  OpenDaylight Troubleshooting Tools
+   OpenDaylight Troubleshooting Tools
 
-  optional arguments:
-    -h, --help            show this help message and exit
-    -v, --verbose         verbosity (-v, -vv)
-    -V, --version         show program's version number and exit
+   optional arguments:
+     -h, --help            show this help message and exit
+     -v, --verbose         verbosity (-v, -vv)
+     -V, --version         show program's version number and exit
 
-  subcommands:
-    Command Tool
+   subcommands:
+     Command Tool
 
-    {csit,model,analyze}
+     {bist,csit,karaf,model,monitor,analyze,show}
+
 
 Contribute
 ----------
