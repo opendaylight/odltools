@@ -9,6 +9,11 @@ import unittest
 from odltools import cli
 from odltools.csit import robotfiles
 
+try:
+    import unittest.mock as mock  # py3
+except ImportError:
+    import mock  # py2
+
 
 class TestOdltools(unittest.TestCase):
     DATAPATH = "/tmp/output_01_l2.xml.gz"
@@ -37,6 +42,21 @@ class TestOdltools(unittest.TestCase):
         parser = cli.create_parser()
         args = parser.parse_args(['csit', self.DATAPATH, self.OUTPATH, '-g', '-d'])
         robotfiles.run(args)
+
+    @mock.patch('sys.exit')
+    @mock.patch.object(cli, 'parse_args')
+    def test_cli_exits_with_error_code(self, parse_args_mock, exit_mock):
+        def exit_with_exit_code(args):
+            return args.exit_code
+
+        parse_args_mock.return_value = mock.Mock(
+            verbose=0,
+            func=exit_with_exit_code,
+            exit_code=42,
+        )
+
+        cli.main()
+        exit_mock.assert_called_with(42)
 
 
 if __name__ == '__main__':

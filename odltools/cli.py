@@ -5,6 +5,7 @@
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
 import argparse
+import sys
 
 from odltools import logg
 import odltools.csit.cli
@@ -43,4 +44,4 @@ def main():
     args = parse_args()
     if args.verbose > 0:
         logg.debug()
-    args.func(args)
+    sys.exit(args.func(args))
