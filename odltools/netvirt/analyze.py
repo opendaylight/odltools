@@ -287,15 +287,15 @@ def analyze_tunnels(args):
             src_vtep = tep_pair.get('src-vtep')
             dst_vtep = tep_pair.get('dst-vtep')
             if not direct_tunnels and not ifaces.get(tunnel_name):
-                print("..TunnelInterface {} between {} and {} missing from config".format(
+                print("..TunnelInterface {} between {} and {} missing from ietf-interface config".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
                 all_tunnels_up = False
             elif not ovsdb_config_tunnels.get(tunnel_name):
-                print("..TerminationPoint {} between {} and {} missing from config".format(
+                print("..TerminationPoint {} between {} and {} missing from ovsdb tology config".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
                 all_tunnels_up = False
             elif not ovsdb_oper_tunnels.get(tunnel_name):
-                print("..TerminationPoint {} between {} and {} missing from config".format(
+                print("..TerminationPoint {} between {} and {} missing from ovsdb topology oper".format(
                     tunnel_name, src_vtep.get('ip-address'), dst_vtep.get('ip-address')))
                 all_tunnels_up = False
             elif not direct_tunnels and not ifstates.get(tunnel_name):
