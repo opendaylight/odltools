@@ -87,7 +87,8 @@ def add_show_parser(parser):
     parser = parsers.add_parser("neutron", description="show neutron data", help="show neutron data")
     add_common_args(parser)
     parser.add_argument("object", choices=["all", "floatingips", "networks", "ports", "routers",
-                                           "security-groups", "security-rules", "subnets", "trunks", "bgpvpns"])
+                                           "security-groups", "security-rules", "subnets", "trunks",
+                                           "bgpvpns", "unused-security-groups"])
     parser.add_argument("--short", action="store_true", default=False,
                         help="display less information")
     parser.set_defaults(func=show.show_neutron)
