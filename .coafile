@@ -1,14 +1,6 @@
 [all]
 ignore = .tox/**, docs/**, .eggs/**
 
-[all.GitCommit]
-bears = GitCommitBear
-ignore_length_regex = Signed-off-by,
-    Also-by,
-    Co-authored-by,
-    http://,
-    https://
-
 [all.Python]
 bears =
     PEP8Bear,
@@ -37,11 +29,3 @@ ignore += incubator/ovsreplay/ovs-replay.py # bandit does not like this file
 bears = RSTcheckBear,
     # WriteGoodLintBear # has issues with some passive words
 files = **.rst
-
-[all.Spacing]
-bears = SpaceConsistencyBear
-files = **/*.py
-use_spaces = True
-allow_trailing_whitespace = False
-enforce_newline_at_EOF = True
-# default_actions = SpaceConsistencyBear: ApplyPatchAction

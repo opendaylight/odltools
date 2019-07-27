@@ -25,8 +25,12 @@ def get_vteps(args, tz_name="default-transport-zone"):
         "itm_transport_zones"})
     t_zones = config.gmodels.itm_transport_zones.get_clist_by_key()
     t_zone = t_zones.get(tz_name)
-    if not t_zone or not t_zone.get('subnets'):
+    if not t_zone or (not t_zone.get('subnets') and not t_zone.get('vteps')):
         return None
+    if t_zone.get('vteps'):
+        # From ODL Sodium version onwards subnets are removed from.
+        # transport_zone yang model
+        return t_zone.get('vteps')
     for subnet in t_zone.get('subnets'):
         # Currently assume just one subnet configured.
         # Revisit when multiple supported
