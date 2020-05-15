@@ -244,6 +244,11 @@ def get_flow_info_from_acl_table(flow):
         lport = inv_flow_parser.get_lport_from_metadata(metadata, mask)
         if lport:
             flow.pdata['lport'] = int(lport, 16)
+    if not flow.pdata.get('lport'):
+        m_reg6 = inv_flow_parser.get_match_reg6(flow.rdata)
+        lport = inv_flow_parser.get_lport_from_mreg6(m_reg6)
+        if lport:
+            flow.pdata['lport'] = int(lport, 16)
     a_conntrk = inv_flow_parser.get_act_conntrack(flow.rdata)
     if a_conntrk and a_conntrk.get('conntrack-zone'):
         flow.pdata['elan-tag'] = a_conntrk.get('conntrack-zone')
